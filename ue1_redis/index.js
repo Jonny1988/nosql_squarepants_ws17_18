@@ -6,11 +6,9 @@ var app = express();
 
 app.get('/*', function (req, res) {
 	res.writeHead(200, {'ContentType': 'text/plain'});
-	var responseMessage;
 	client.get(req.url.replace('/',''), function(err , object){
-		responseMessage = object;
 		console.log("object from db: %s ",object);
-		res.end( responseMessage );
+		res.end( object );
 	});
 });
 
