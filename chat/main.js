@@ -77,11 +77,6 @@ io.on('connection', function(socket) {
 				console.log("So viele messages gibt es : "+q.messageCount);
 				if (q.messageCount <= 0)
 					return;
-				ch.get(q.queue, {noAck: false}, function(err, msg) {
-					var message = JSON.parse(msg.content.toString());
-					console.log(message);
-				});
-				return;
 				ch.consume(q.queue, function(msg) {
 					var message = JSON.parse(msg.content.toString());
 					console.log("lese nachricht aus der persisterenden Queue : "+message.message);
