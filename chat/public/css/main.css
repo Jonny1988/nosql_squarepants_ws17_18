@@ -1,0 +1,38 @@
+body {
+	background-color: #230418;
+	color: white;
+}
+#main > .row {
+	height: 80%;
+	margin-top: 10%;
+	border: 3px solid #d7d7d7;
+	border-radius: 5px;
+	background-color: black;
+}
+.side-area {
+	height: 100%;
+	background-image: url('../assets/background/green-trans.png');
+	background-size: auto 100%;
+	border-right: 3px solid #d7d7d7;
+	flex-basis: 300px;
+	flex-grow: 0;
+}
+.main-area {
+	height: 100%;
+	background-image: url('../assets/background/blue-trans.png');
+	background-size: 100% 100%;
+}
+.main-area .text-area {
+	height: calc(100% - 50px);
+}
+.main-area .text-area .user-name {
+	display: inline-block;
+	width: 20%;
+}
+.main-area .text-area .content {
+	display: inline-block;
+	width: 80%;
+}
+textarea {
+	resize: none;
+}
