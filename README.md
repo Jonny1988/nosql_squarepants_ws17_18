@@ -1,10 +1,11 @@
 # nosql_squarepants_ws17_18
 
-# Setup Lernplatform
+# Setup Lernplattform
 
 ##
-Die Lernplaatform benötigt eine SQL Datenbank für die Session und die Benutzer. Die Daten werden in einer MongoDB gespeichert.
-MariaDB
+Die Lernplattform benötigt eine SQL Datenbank für die Session und die Benutzer. Die Daten werden in einer MongoDB gespeichert.
+
+## MariaDB
 ```
 CREATE DATABASE userdb;
 ```
@@ -20,7 +21,7 @@ CREATE TABLE users( username VARCHAR(255) NOT NULL PRIMARY KEY, lastname VARCHAR
 * mySQL starten
 * npm run start
 
-Die Lernplatform ist nun unter http://localhost:3000 erreichbar
+Die Lernplattform ist nun unter http://localhost:3000 erreichbar
 
 ## Bedinung
 Damit der Lehrbeauftragte Themen anlegen kann, muss zuerst ein Kurs angelegt werden. Für den Kurs müssen danach Themen angelegt werden. Danach kann man für die Themen der Kurse Tests anlegen und Dateien hochladen.
