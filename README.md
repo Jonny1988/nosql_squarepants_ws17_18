@@ -18,7 +18,7 @@ CREATE TABLE users( username VARCHAR(255) NOT NULL PRIMARY KEY, lastname VARCHAR
 * in das Verzeichnis wechseln
 * npm install
 * MongoDB starten
-* mySQL starten
+* MariaDB starten
 * npm run start
 
 Die Lernplattform ist nun unter http://localhost:3000 erreichbar
