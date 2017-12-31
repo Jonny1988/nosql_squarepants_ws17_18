@@ -2,10 +2,10 @@
 
 # Setup Lernplattform
 
-##
+## Setup
 Die Lernplattform benötigt eine SQL Datenbank für die Session und die Benutzer. Die Daten werden in einer MongoDB gespeichert.
 
-## MariaDB
+### MariaDB
 ```
 CREATE DATABASE userdb;
 ```
@@ -14,7 +14,7 @@ Die Datenbank muss folgende Tabelle enthalten
 CREATE TABLE users( username VARCHAR(255) NOT NULL PRIMARY KEY, lastname VARCHAR(255),
 	surname VARCHAR(255),	email VARCHAR(255), password VARCHAR(255) , role BigInt NOT NULL);
 ```
-## Projekt starten
+### Projekt starten
 * in das Verzeichnis wechseln
 * npm install
 * MongoDB starten
