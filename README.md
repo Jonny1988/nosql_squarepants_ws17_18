@@ -1,6 +1,6 @@
 # nosql_squarepants_ws17_18
 
-# Setup Lernplattform
+# Lernplattform
 
 ## Setup
 Die Lernplattform benötigt eine SQL Datenbank für die Session und die Benutzer. Die Daten werden in einer MongoDB gespeichert.
