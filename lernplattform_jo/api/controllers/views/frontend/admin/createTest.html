@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Lernplatform Student</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="http://localhost:3000/files/choices.js"></script>
+    <script src="http://localhost:3000/files/menu.js"></script>
+</head>
+<body>
+<div id="menu"></div>
+<div class="container">
+
+    <form method="post" id="createThemeForm" action="http://localhost:3000/test/create/">
+        <div id="choice"></div>
+        <hr>
+        <div class="form-group">
+            <label for="testname">Testname</label>
+            <input type="text" class="form-control" name="testname" id="testname">
+        </div>
+        <hr>
+        <div class="form-group">
+            <label for="publishedFrom">Ver&oumlffentlicht von</label>
+            <input type="date" class="form-control" name="publishedFrom" id="publishedFrom">
+        </div>
+        <div class="form-group">
+            <label for="publishedUntil">Ver&oumlffentlicht bis</label>
+            <input type="date" class="form-control" name="publishedUntil" id="publishedUntil">
+        </div>
+        <hr>
+        <div class="form-group">
+            <label for="question0">Frage 1</label>
+            <textarea class="form-control" type="textfield" id="question0" name="question0"
+                      placeholder="Erste Frage"></textarea>
+            <label for="answer0Question0">Antwort 1</label>
+            <textarea class="form-control" type="textfield" id="answer0Question0" name="answer0Question0"
+                      placeholder="Antwort"></textarea>
+            <label for="answer1Question0">Antwort 2</label>
+            <textarea class="form-control" type="textfield" id="answer1Question0" name="answer1Question0"
+                      placeholder="Antwort"></textarea>
+            <label for="answer2Question0">Antwort 3</label>
+            <textarea class="form-control" type="textfield" id="answer2Question0" name="answer2Question0"
+                      placeholder="Antwort"></textarea>
+            <label for="answer3Question0">Antwort 4</label>
+            <textarea class="form-control" type="textfield" id="answer3Question0" name="answer3Question0"
+                      placeholder="Antwort"></textarea>
+            <label for="answerQuestion0">Korrekte Antwort</label>
+            <select class="custom-select" name="answerQuestion0" id="answerQuestion0">
+                <option selected value="0">1</option>
+                <option value="1">2</option>
+                <option value="2">3</option>
+                <option value="3">4</option>
+            </select>
+        </div>
+        <hr>
+        <div class="form-group">
+            <label for="question1">Frage 2</label>
+            <textarea class="form-control" type="textfield" id="question1" name="question1"
+                      placeholder="Erste Frage"></textarea>
+            <label for="answer0Question1">Antwort 1</label>
+            <textarea class="form-control" type="textfield" id="answer0Question1" name="answer0Question1"
+                      placeholder="Antwort"></textarea>
+            <label for="answer1Question1">Antwort 2</label>
+            <textarea class="form-control" type="textfield" id="answer1Question1" name="answer1Question1"
+                      placeholder="Antwort"></textarea>
+            <label for="answer2Question1">Antwort 3</label>
+            <textarea class="form-control" type="textfield" id="answer2Question1" name="answer2Question1"
+                      placeholder="Antwort"></textarea>
+            <label for="answer3Question1">Antwort 4</label>
+            <textarea class="form-control" type="textfield" id="answer3Question1" name="answer3Question1"
+                      placeholder="Antwort"></textarea>
+            <label for="answerQuestion1">Korrekte Antwort</label>
+            <select class="custom-select" name="answerQuestion1" id="answerQuestion1">
+                <option selected value="0">1</option>
+                <option value="1">2</option>
+                <option value="2">3</option>
+                <option value="3">4</option>
+            </select>
+        </div>
+        <hr>
+        <div class="form-group">
+            <label for="question2">Frage 3</label>
+            <textarea class="form-control" type="textfield" id="question2" name="question2"
+                      placeholder="Erste Frage"></textarea>
+            <label for="answer0Question2">Antwort 1</label>
+            <textarea class="form-control" type="textfield" id="answer0Question2" name="answer0Question2"
+                      placeholder="Antwort"></textarea>
+            <label for="answer1Question2">Antwort 2</label>
+            <textarea class="form-control" type="textfield" id="answer1Question2" name="answer1Question2"
+                      placeholder="Antwort"></textarea>
+            <label for="answer2Question2">Antwort 3</label>
+            <textarea class="form-control" type="textfield" id="answer2Question2" name="answer2Question2"
+                      placeholder="Antwort"></textarea>
+            <label for="answer3Question2">Antwort 4</label>
+            <textarea class="form-control" type="textfield" id="answer3Question2" name="answer3Question2"
+                      placeholder="Antwort"></textarea>
+            <label for="answerQuestion2">Korrekte Antwort</label>
+            <select class="custom-select" name="answerQuestion2" id="answerQuestion2">
+                <option selected value="0">1</option>
+                <option value="1">2</option>
+                <option value="2">3</option>
+                <option value="3">4</option>
+            </select>
+        </div>
+        <hr>
+        <div class="form-group">
+            <label for="question3">Frage 4</label>
+            <textarea class="form-control" type="textfield" id="question3" name="question3"
+                      placeholder="Erste Frage"></textarea>
+            <label for="answer0Question3">Antwort 1</label>
+            <textarea class="form-control" type="textfield" id="answer0Question3" name="answer0Question3"
+                      placeholder="Antwort"></textarea>
+            <label for="answer1Question3">Antwort 2</label>
+            <textarea class="form-control" type="textfield" id="answer1Question3" name="answer1Question3"
+                      placeholder="Antwort"></textarea>
+            <label for="answer2Question3">Antwort 3</label>
+            <textarea class="form-control" type="textfield" id="answer2Question3" name="answer2Question3"
+                      placeholder="Antwort"></textarea>
+            <label for="answer3Question3">Antwort 4</label>
+            <textarea class="form-control" type="textfield" id="answer3Question3" name="answer3Question3"
+                      placeholder="Antwort"></textarea>
+            <label for="answerQuestion3">Korrekte Antwort</label>
+            <select class="custom-select" name="answerQuestion3" id="answerQuestion3">
+                <option selected value="0">1</option>
+                <option value="1">2</option>
+                <option value="2">3</option>
+                <option value="3">4</option>
+            </select>
+        </div>
+        <hr>
+        <button class="btn btn-primary" id="saveCourse">Test anlegen</button>
+    </form>
+</div>
+</body>
+<script>
+    $(document).ready(function () {
+
+        $changeMethodBody = function (coursename, length) {
+
+        }
+
+    });
+</script>
+</html>
