@@ -1,0 +1,35 @@
+﻿~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Lernplattform Setup~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+~~~~~~~~~~~~~~~~MySQL~~~~~~~~~~~~~~~~
+Standardport
+Datenbanken
+- userdb
+
+CREATE DATABASE userdb;
+
+Die Datenbank muss folgende Tabelle enthalten
+
+CREATE TABLE users( username VARCHAR(255) NOT NULL PRIMARY KEY, lastname VARCHAR(255),
+	surname VARCHAR(255),	email VARCHAR(255), password VARCHAR(255) , role BigInt NOT NULL);
+
+
+~~~~~~~~~~~~~~~~MongoDB~~~~~~~~~~~~~~~~
+Standardport
+
+
+~~~~~~~~~~~~~~~~Projekt aufsetzen~~~~~~~~~~~~~~~~
+(1) in das Verzeichnis wechseln
+(2) npm install
+(3) MongoDB starten
+(4) mySQL starten
+(5) npm run start
+
+Die Lernplatform ist nun mit http://localhost:3000 erreichbar
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~API~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~Kurse~~~~~~~~~~~~~~~~
+Annahme: Kursnamen sind einzigartig.
+
+
+~~~~~~~~~~~~~~~~Themen~~~~~~~~~~~~~~~~
+Annahme: Für jeden Kurs kann ein Thema nur ein einziges mal vorkommen
