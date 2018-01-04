@@ -1,4 +1,4 @@
-const securityController = require("../controllers/securityController")
+const securityController = require("../services/securityService")
 const mongoose = require('mongoose');
 
 require('../models/Theme');
@@ -63,7 +63,7 @@ exports.getThemesForCourseAdmin = function (request, response) {
 };
 
 exports.getThemesForCourseStudent = function (request, response) {
-    securityController.isSessionUser(request, response, function () {
+    securityController.getSessionUser(request, response, function () {
         const course_id = request.query["course_id"].replace(new RegExp(new RegExp("\""), 'g'), "");
         const student_id = "Hans"//request.session.username;
         Course.findOne({_id : course_id}, function (err, course) {

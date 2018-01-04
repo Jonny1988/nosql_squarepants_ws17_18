@@ -1,4 +1,4 @@
-const securityController = require('../controllers/securityController');
+const securityController = require('../services/securityService');
 const sqlConnection = require('../dbconnection/mariasql');
 const mongoose = require('mongoose');
 
@@ -108,7 +108,7 @@ exports.getAdminCourses = function (request, response) {
 };
 
 exports.getStudentsFromCourse = function (request, response) {
-    securityController.isSessionUser(request, response, function () {
+    securityController.getSessionUser(request, response, function () {
         const _id = request.query["_id"].replace(new RegExp(new RegExp("\""), 'g'), "");
         Course.findOne({_id: _id}, function (err, course) {
             if (err) {
@@ -123,7 +123,7 @@ exports.getStudentsFromCourse = function (request, response) {
 };
 
 exports.getCoursesForStudent = function (request, response) {
-    securityController.isSessionUser(request, response, function () {
+    securityController.getSessionUser(request, response, function () {
         const _id = request.query["_id"].replace(new RegExp(new RegExp("\""), 'g'), "");
         const username = request.session.username;
         Course.find({_id: _id}, function (err, courses) {

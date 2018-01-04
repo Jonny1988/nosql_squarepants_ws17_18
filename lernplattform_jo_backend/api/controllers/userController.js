@@ -1,12 +1,12 @@
-const securityController = require("../controllers/securityController")
+const securityController = require("../services/securityService")
 const databaseConnection = require("../dbconnection/mariasql")
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const con = databaseConnection.getCon();
 
 exports.login = function (request, response) {
-    const username = (request.body).username;
-    const password = (request.body).password;
+    const username = request.body.username;
+    const password = request.body.password;
     const con = databaseConnection.getCon();
     const sql = "Select * from users where username = \'" + username + "\';";
     con.query(sql, function (err, result, fields) {
@@ -15,7 +15,7 @@ exports.login = function (request, response) {
             bcrypt.compare(password, result[0].password, function (err, isCorrectPassword) {
                 if (isCorrectPassword) {
                     request.session.username = username;
-                    response.sendStatus(200);
+                    response.redirect("/index/");
                 } else {
                     response.send("Das eingegebene Passwort ist nicht korrekt");
                 }

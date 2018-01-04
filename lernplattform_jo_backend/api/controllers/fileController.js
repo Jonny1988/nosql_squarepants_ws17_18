@@ -1,5 +1,5 @@
 const path = require('path');
-const securityController = require('../controllers/securityController');
+const securityController = require('../services/securityService');
 const fileUpload = require('express-fileupload');
 const mongoose = require('mongoose');
 
@@ -16,7 +16,7 @@ exports.downloadFileAdmin = function (request, response) {
 };
 
 exports.downloadFileStudent = function (request, response) {
-    securityController.isSessionUser(request, response, function () {
+    securityController.getSessionUser(request, response, function () {
         const _id = request.query["_id"].replace(new RegExp(new RegExp("\""), 'g'), "");
         File.find({_id: _id}, function (err, file) {
             if (err)
@@ -44,7 +44,7 @@ exports.getFilesForThemeAdmin = function (request, response) {
 };
 
 exports.getFilesForThemeStudent = function (request, response) {
-    securityController.isSessionUser(request, response, function () {
+    securityController.getSessionUser(request, response, function () {
         const course_id = request.query["course_id"].replace(new RegExp(new RegExp("\""), 'g'), "");
         const theme_id = request.query["theme_id"].replace(new RegExp(new RegExp("\""), 'g'), "");
         File.find({course_id: course_id, theme_id: theme_id}, function (err, files) {

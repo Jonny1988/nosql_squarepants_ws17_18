@@ -1,21 +1,17 @@
-const databaseConnection = require('../dbconnection/mariasql');
-const securityController = require('../controllers/securityController');
+const securityService = require('../services/securityService');
 const path = require("path");
 
 
 navigateToView = function (request, response, viewname) {
-    securityController.isSessionUser(request, response, function () {
-        const con = databaseConnection.getCon();
-        const sql = "Select * from users where username = \'" + request.session.username + "\';";
-        con.query(sql, function (err, result, fields) {
-            //if user is admin
-            if (result[0].role == 0x15) {
-                response.sendFile(path.join(__dirname + '/views/admin/' + viewname + '.html'));
-            } else {
-                response.sendFile(path.join(__dirname + '/views/student/' + viewname + '.html'));
-            }
-        });
-    })
+    securityService.getSessionUser(request).then(function (isAdmin) {
+        if (isAdmin)
+            response.sendFile(path.join(__dirname + '/views/admin/' + viewname + '.html'));
+        else
+            response.sendFile(path.join(__dirname + '/views/student/' + viewname + '.html'));
+    }).catch(function(err) {
+        console.log(err);
+        response.sendStatus(403);
+    });
 };
 
 exports.getLoginView = function (request, response) {

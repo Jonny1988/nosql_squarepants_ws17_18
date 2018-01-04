@@ -1,7 +1,3 @@
-const databaseConnection = require('../dbconnection/mariasql');
-const viewController = require('../controllers/viewController');
-const securityController = require('../controllers/securityController');
-
 module.exports = function (app) {
 
     const courseController = require('../controllers/courseController');
@@ -30,9 +26,8 @@ module.exports = function (app) {
 
     const viewController = require('../controllers/viewController');
     app.route('/login/').get(viewController.getLoginView);
-    app.route('/index/').get(viewController.getLoginView);
     app.route('/').get(viewController.getLoginView);
-    app.route('/view/overview/').get(viewController.getOverview);
+    app.route('/index/').get(viewController.getOverview);
 
     const fileController = require('../controllers/fileController');
     app.route('/file/delete/').get(fileController.deleteFile);

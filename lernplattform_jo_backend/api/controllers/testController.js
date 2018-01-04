@@ -1,5 +1,5 @@
 const path = require('path');
-const securityController = require('../controllers/securityController');
+const securityController = require('../services/securityService');
 const mongoose = require('mongoose');
 
 require('../models/MCT');
@@ -80,7 +80,7 @@ exports.getTestsForCourseAdmin = function (request, response) {
 };
 
 exports.getTestsForCourseStudent = function (request, response) {
-    securityController.isSessionUser(request, response, function () {
+    securityController.getSessionUser(request, response, function () {
         const course_id = request.query["course_id"].replace(new RegExp(new RegExp("\""), 'g'), "");
         MCT.find({course_id: course_id}, function (err, tests) {
             if (err)
@@ -110,7 +110,7 @@ exports.getResultsForAdmin = function (request, response) {
 };
 
 exports.getResultsForStudent = function (request, response) {
-    securityController.isSessionUser(request, response, function () {
+    securityController.getSessionUser(request, response, function () {
         const course_id = request.query["course_id"].replace(new RegExp(new RegExp("\""), 'g'), "");
         const test_id = request.query["test_id"].replace(new RegExp(new RegExp("\""), 'g'), "");
         const student = request.query["student"].replace(new RegExp(new RegExp("\""), 'g'), "");
@@ -122,7 +122,7 @@ exports.getResultsForStudent = function (request, response) {
 
 
 exports.saveStudentTestResult = function (request, response) {
-    securityController.isSessionUser(request, response, function () {
+    securityController.getSessionUser(request, response, function () {
         const course_id = request.body.course_id;
         const test_id = request.body.test_id;
         const username = request.session.username;
