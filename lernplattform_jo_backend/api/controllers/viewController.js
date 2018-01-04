@@ -15,14 +15,14 @@ navigateToView = function (request, response, viewname) {
 };
 
 exports.getLoginView = function (request, response) {
-    response.sendFile(path.join(__dirname + '/views/index.html'));
+    response.sendFile(path.join(__dirname + '/views/login.html'));
 };
 
 exports.getRegisterView = function (request, response) {
     this.getLoginView(request, response);
 };
 exports.getOverview = function (request, response) {
-    navigateToView(request, response, 'overview');
+    navigateToView(request, response, 'index');
 };
 exports.getCourseC = function (request, response) {
     navigateToView(request, response, 'createCourse');
