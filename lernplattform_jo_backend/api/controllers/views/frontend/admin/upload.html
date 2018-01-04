@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dateiverwaltung</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="http://localhost:3000/files/choices.js"></script>
+    <script src="http://localhost:3000/files/menu.js"></script>
+</head>
+<body>
+<div id="menu"></div>
+<div class="container">
+    <form id="createThemeForm" action="http://localhost:3000/files/uploadFile/" method="post" encType="multipart/form-data">
+        <div id="choice"></div>
+        <div class="form-group">
+            <label for="themename">Thema auswählen</label>
+            <select class="form-control" id="themename" name="themename" class="form-control">
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="publishedFrom">Ver&oumlffentlicht von</label>
+            <input type="date" class="form-control" name="publishedFrom" id="publishedFrom">
+        </div>
+        <div class="form-group">
+            <label for="publishedUntil">Ver&oumlffentlicht bis</label>
+            <input type="date" class="form-control" name="publishedUntil" id="publishedUntil">
+        </div>
+        <div id="form-group">
+            <input type="file" name="file">
+        </div>
+        <button class="btn btn-primary" type="submit">Datei hochladen</button>
+    </form>
+</div>
+<script>
+    $(document).ready(function () {
+        $changeMethodBody = function (coursename,length) {
+            $.get("http://localhost:3000/themes/?coursename=\"" + coursename + "\"", function (data) {
+                var unorderedList = "";
+                for (var pos in data) {
+                    //get alle files from this theme
+                    unorderedList += "<option class=\"list-group-item\">" + data[pos].themename + "</option>";
+                }
+                $("#themename").html(unorderedList);
+            });
+        }
+    });
+</script>
+</body>
+</html>

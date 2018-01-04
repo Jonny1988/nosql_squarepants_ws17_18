@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="http://localhost:3000/files/menu.js"></script>
+</head>
+<body>
+<div id="menu"></div>
+<div class="container">
+    <form>
+        <div class="form-group" id="testContent">
+            Content vom Test
+        </div>
+        <button type="submit" class="btn primary-btn">Test absenden</button>
+    </form>
+</div>
+<script>
+    $(document).ready(function () {
+        $.get("http://localhost:3000/test/student")
+    })
+</script>
+
+</body>
+</html>

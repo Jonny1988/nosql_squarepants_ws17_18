@@ -13,6 +13,7 @@ port = process.env.PORT || 3000;
 
 // default options
 app.use(fileUpload());
+app.use(express.static('public'));
 
 //session management
 var options = {

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Lernplatform Student</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="http://localhost:3000/files/choices.js"></script>
+    <script src="http://localhost:3000/files/menu.js"></script>
+</head>
+<body>
+<div id="menu"></div>
+<div class="container" id="edit course">
+    <div id="choice"></div>
+    <div class="row" id="results">
+        Keine Eintr&aumlge vorhanden
+    </div>
+</div>
+</body>
+<style>
+
+</style>
+<script>
+    $(document).ready(function(){
+
+        $changeMethodBody = function(coursename){
+            console.log("change method body in results.")
+            $.get("http://localhost:3000/test/course/result/?coursename=\""+ coursename +"",function(results){
+                $("#results").html(results);
+            } );
+        }
+
+    });
+</script>
+</html>
