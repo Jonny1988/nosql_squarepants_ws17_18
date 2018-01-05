@@ -140,6 +140,15 @@ exports.getCoursesForStudent = function (request, response) {
 };
 
 exports.getCourse = function (request, response) {
-    // TODO
-    // navigateToView(request, response, 'course/'+request.params.coursename );
+    securityService.getSessionUser(request).then(function (user) {
+        Course.findOne({coursename: request.params.coursename}, function (err, course) {
+            if (err || !course)
+                response.sendStatus(500);
+            else {
+                response.render('course', { user: user, course: course});
+            }
+        });
+    }).catch(function() {
+        response.sendStatus(403);
+    });
 };

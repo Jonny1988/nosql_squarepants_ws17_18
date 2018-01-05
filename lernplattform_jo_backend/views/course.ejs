@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/css/library/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/main.css">
+    <script src="/js/jquery-3.2.1.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+</head>
+<body>
+<nav id="nav" class="navbar navbar-expand-lg navbar-dark bg-primary justify-content-between">
+    <a class="navbar-brand" href="#">Lernplattform</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbar">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a href="/index/" class="nav-link">Hauptseite</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active">Kurs <%= course.coursename %></a>
+            </li>
+        </ul>
+    </div>
+    <span data-display="username" class="navbar-text" style="margin-right: 10px">
+        <%= user.username %>
+    </span>
+    <form class="form-inline">
+        <a class="btn btn-dark" type="button" href="/logout">Ausloggen</a>
+    </form>
+</nav>
+
+<div class="container">
+   Dieser Kurs kommt vom <%= course.owner %> mit der id <%= course._id %>
+</div>
+</body>
+<script>
+    $(document).ready(function () {;
+    });
+</script>
+</html>
