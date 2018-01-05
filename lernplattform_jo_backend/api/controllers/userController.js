@@ -79,7 +79,7 @@ exports.createUser = function (request, response) {
 // Auch dies sollte fraglich an den security Service übergeben werden
 exports.logout = function (request, response) {
     request.session.destroy();
-    response.sendStatus(200);
+    response.redirect("/login/");
 };
 
 exports.getAllStudents = function(request, response){
@@ -93,3 +93,11 @@ exports.getAllStudents = function(request, response){
         });
     })
 };
+
+exports.getLoggedInUser = function(request, response) {
+    securityService.getSessionUser(request).then(function (user) {
+        response.send(user);
+    }).catch(function() {
+        response.sendStatus(500);
+    })
+}

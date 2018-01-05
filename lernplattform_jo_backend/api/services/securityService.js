@@ -5,9 +5,12 @@ function getUser(username) {
     const sql = "Select * from users where username = \'" + username + "\';";
     return new Promise(function(resolve, reject) {
         con.query(sql, function (err, result) {
+
             if (err) {
                 reject(err);
-            } else {
+            } else if (!result[0])
+                reject(new Error("Kein User mit dem Namen gefunden"));
+            else {
                 resolve(result[0]);
             }
         });
@@ -22,7 +25,7 @@ exports.getSessionUser = function (request) {
     return new Promise(function(resolve, reject) {
         try {
             getUser(request.session.username).then(function (user) {
-                resolve(user.role == 0x15, user.username);
+                resolve({isAdmin: user.role == 0x15, username: user.username});
             }).catch(function (err) {
                 reject(err);
             });
@@ -46,9 +49,9 @@ exports.getSessionUser = function (request) {
  */
 exports.isSessionUser = function(request, response, checkForAdmin) {
     return new Promise(function(resolve, reject) {
-        this.getSessionUser(request).then(function (isAdmin, username) {
-            if (!checkForAdmin || isAdmin)
-                resolve(isAdmin, username);
+        this.getSessionUser(request).then(function (user) {
+            if (!checkForAdmin || user.isAdmin)
+                resolve(user);
             else {
                 response.sendStatus(500);
                 reject();

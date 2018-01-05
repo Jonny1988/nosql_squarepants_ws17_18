@@ -23,6 +23,7 @@ module.exports = function (app) {
     app.route('/user/login/').post(userController.login);
     app.route('/logout/').get(userController.logout);
     app.route('/students/').get(userController.getAllStudents);
+    app.route('/user/get/').get(userController.getLoggedInUser);
 
     const viewController = require('../controllers/viewController');
     app.route('/login/').get(viewController.getLoginView);

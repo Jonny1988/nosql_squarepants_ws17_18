@@ -3,8 +3,8 @@ const path = require("path");
 
 
 navigateToView = function (request, response, viewname) {
-    securityService.getSessionUser(request).then(function (isAdmin) {
-        if (isAdmin)
+    securityService.getSessionUser(request).then(function (user) {
+        if (user.isAdmin)
             response.sendFile(path.join(__dirname + '/views/admin/' + viewname + '.html'));
         else
             response.sendFile(path.join(__dirname + '/views/student/' + viewname + '.html'));

@@ -122,14 +122,14 @@ exports.getResultsForStudent = function (request, response) {
 
 
 exports.saveStudentTestResult = function (request, response) {
-    securityService.isSessionUser(request, response, false).then(function (isAdmin, username) {
+    securityService.isSessionUser(request, response, false).then(function (user) {
         const course_id = request.body.course_id;
         const test_id = request.body.test_id;
         const answers = request.body;
         Result.find({
             course_id: course_id,
             test_id: test_id,
-            student: username
+            student: user.username
         }, function (err, result) {
             const res = result;
             MCT.find({course_id: course_id, _id: test_id}, function (err, test) {

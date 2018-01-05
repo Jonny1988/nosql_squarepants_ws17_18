@@ -63,7 +63,7 @@ exports.getThemesForCourseAdmin = function (request, response) {
 };
 
 exports.getThemesForCourseStudent = function (request, response) {
-    securityService.isSessionUser(request, response, false).then(function (isAdmin, username) {
+    securityService.isSessionUser(request, response, false).then(function (user) {
         const course_id = request.query["course_id"].replace(new RegExp(new RegExp("\""), 'g'), "");
         const student_id = "Hans";
         Course.findOne({_id : course_id}, function (err, course) {

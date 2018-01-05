@@ -12,7 +12,7 @@ const Theme = mongoose.model('theme');
 
 
 exports.createCourse = function (request, response) {
-    securityService.isSessionUser(request, response, true).then(function (isAdmin, username) {
+    securityService.isSessionUser(request, response, true).then(function (user) {
         const coursename = request.body.coursename;
         Course.findOne({coursename: coursename}, function (err, data) {
             if (err)
@@ -22,7 +22,7 @@ exports.createCourse = function (request, response) {
                 //response.sendStatus(500);
             } else {
                 const course = new Course({
-                    owner: username,
+                    owner: user.username,
                     description: request.body.description,
                     coursename: coursename
                 });
@@ -96,8 +96,8 @@ exports.removeStudentsFromCourse = function (request, response) {
 };
 
 exports.getAdminCourses = function (request, response) {
-    securityService.isSessionUser(request, response, true).then(function (isAdmin, username) {
-        Course.find({owner: username},
+    securityService.isSessionUser(request, response, true).then(function (user) {
+        Course.find({owner: user.username},
             function (err, courses) {
                 if (err || !courses)
                     response.sendStatus(500);
@@ -122,7 +122,7 @@ exports.getStudentsFromCourse = function (request, response) {
 };
 
 exports.getCoursesForStudent = function (request, response) {
-    securityService.isSessionUser(request, response, false).then(function (isAdmin, username) {
+    securityService.isSessionUser(request, response, false).then(function (user) {
         const _id = request.query["_id"].replace(new RegExp(new RegExp("\""), 'g'), "");
         Course.find({_id: _id}, function (err, courses) {
             if (err || !courses)
@@ -130,7 +130,7 @@ exports.getCoursesForStudent = function (request, response) {
             let studentCourses = [];
             for (let pos in courses) {
                 const possibleStudentCourse = courses[pos];
-                if (possibleStudentCourse.students.includes(username)) {
+                if (possibleStudentCourse.students.includes(user.username)) {
                     studentCourses.push({_id: possibleStudentCourse._id, coursename: possibleStudentCourse.coursename});
                 }
             }
