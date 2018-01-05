@@ -1,5 +1,4 @@
-const securityController = require('../services/securityService');
-const sqlConnection = require('../dbconnection/mariasql');
+const securityService = require('../services/securityService');
 const mongoose = require('mongoose');
 
 require('../models/Course');
@@ -13,7 +12,7 @@ const Theme = mongoose.model('theme');
 
 
 exports.createCourse = function (request, response) {
-    securityController.isSessionUserAdmin(request, response, function () {
+    securityService.isSessionUser(request, response, true).then(function (isAdmin, username) {
         const coursename = request.body.coursename;
         Course.findOne({coursename: coursename}, function (err, data) {
             if (err)
@@ -23,7 +22,7 @@ exports.createCourse = function (request, response) {
                 //response.sendStatus(500);
             } else {
                 const course = new Course({
-                    owner: request.session.username,
+                    owner: username,
                     description: request.body.description,
                     coursename: coursename
                 });
@@ -35,7 +34,7 @@ exports.createCourse = function (request, response) {
 };
 
 exports.deleteCourse = function (request, response) {
-    securityController.isSessionUserAdmin(request, response, function () {
+    securityService.isSessionUser(request, response, true).then(function () {
         const _id = request.body._id;
         Theme.remove({course_id: _id}, function () {
 
@@ -56,7 +55,7 @@ exports.deleteCourse = function (request, response) {
 };
 
 exports.updateCourse = function (request, response) {
-    securityController.isSessionUserAdmin(request, response, function () {
+    securityService.isSessionUser(request, response, true).then(function () {
         Course.findOneAndUpdate({_id: request.body._id}, {
             description: request.body.description,
             coursename: request.body.coursename
@@ -69,7 +68,7 @@ exports.updateCourse = function (request, response) {
 };
 
 exports.addStudentsToCourse = function (request, response) {
-    securityController.isSessionUserAdmin(request, response, function () {
+    securityService.isSessionUser(request, response, true).then(function () {
         Course.findOneAndUpdate({_id: request.body._id},
             {students: request.body.students}, function (err) {
                 if (err)
@@ -80,7 +79,7 @@ exports.addStudentsToCourse = function (request, response) {
 };
 
 exports.removeStudentsFromCourse = function (request, response) {
-    securityController.isSessionUserAdmin(request, response, function () {
+    securityService.isSessionUser(request, response, true).then(function () {
         const removeStudents = request.body.students;
         const _id = request.body._id;
         Course.findOne({_id: _id}, function (err, course) {
@@ -97,8 +96,8 @@ exports.removeStudentsFromCourse = function (request, response) {
 };
 
 exports.getAdminCourses = function (request, response) {
-    securityController.isSessionUserAdmin(request, response, function () {
-        Course.find({owner: request.session.username},
+    securityService.isSessionUser(request, response, true).then(function (isAdmin, username) {
+        Course.find({owner: username},
             function (err, courses) {
                 if (err || !courses)
                     response.sendStatus(500);
@@ -108,7 +107,7 @@ exports.getAdminCourses = function (request, response) {
 };
 
 exports.getStudentsFromCourse = function (request, response) {
-    securityController.getSessionUser(request, response, function () {
+    securityService.isSessionUser(request, response, false).then(function () {
         const _id = request.query["_id"].replace(new RegExp(new RegExp("\""), 'g'), "");
         Course.findOne({_id: _id}, function (err, course) {
             if (err) {
@@ -123,9 +122,8 @@ exports.getStudentsFromCourse = function (request, response) {
 };
 
 exports.getCoursesForStudent = function (request, response) {
-    securityController.getSessionUser(request, response, function () {
+    securityService.isSessionUser(request, response, false).then(function (isAdmin, username) {
         const _id = request.query["_id"].replace(new RegExp(new RegExp("\""), 'g'), "");
-        const username = request.session.username;
         Course.find({_id: _id}, function (err, courses) {
             if (err || !courses)
                 response.sendStatus(500);

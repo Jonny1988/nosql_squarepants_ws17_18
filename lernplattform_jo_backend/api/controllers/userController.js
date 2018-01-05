@@ -1,4 +1,4 @@
-const securityController = require("../services/securityService")
+const securityService = require("../services/securityService")
 const databaseConnection = require("../dbconnection/mariasql")
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
@@ -74,12 +74,14 @@ exports.logout = function (request, response) {
     response.sendStatus(200);
 };
 
-exports.getAllStudents = function(request,response){
-    securityController.isSessionUserAdmin(request,response, function () {
+exports.getAllStudents = function(request, response){
+    securityService.isSessionUser(request, response, false).then(function () {
         const getAllStudents = "Select * from users where role =" + 37 + ";";
-        con.query(getAllStudents, function (err, availableStudents, fields) {
-            if(err) response.sendStatus(500);
-           response.send(availableStudents);
+        con.query(getAllStudents, function (err, availableStudents) {
+            if(err)
+                response.sendStatus(500);
+            else
+                response.send(availableStudents);
         });
-    });
+    })
 };

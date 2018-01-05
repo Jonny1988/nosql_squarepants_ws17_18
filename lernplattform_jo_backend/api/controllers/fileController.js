@@ -1,5 +1,5 @@
 const path = require('path');
-const securityController = require('../services/securityService');
+const securityService = require('../services/securityService');
 const fileUpload = require('express-fileupload');
 const mongoose = require('mongoose');
 
@@ -9,14 +9,14 @@ const File = mongoose.model('file');
 const ObjectId = require('mongodb').ObjectId;
 
 exports.downloadFileAdmin = function (request, response) {
-    securityController.isSessionUserAdmin(request, response, function () {
+    securityService.isSessionUser(request, response, true).then(function () {
         const _id = request.query["_id"].replace(new RegExp(new RegExp("\""), 'g'), "");
         response.sendFile(path.join(__dirname + '/files/' + _id));
     });
 };
 
 exports.downloadFileStudent = function (request, response) {
-    securityController.getSessionUser(request, response, function () {
+    securityService.isSessionUser(request, response, false).then(function () {
         const _id = request.query["_id"].replace(new RegExp(new RegExp("\""), 'g'), "");
         File.find({_id: _id}, function (err, file) {
             if (err)
@@ -32,7 +32,7 @@ exports.downloadFileStudent = function (request, response) {
 };
 
 exports.getFilesForThemeAdmin = function (request, response) {
-    securityController.isSessionUserAdmin(request, response, function () {
+    securityService.isSessionUser(request, response, true).then(function () {
         const course_id = request.query["course_id"].replace(new RegExp(new RegExp("\""), 'g'), "");
         const theme_id = request.query["theme_id"].replace(new RegExp(new RegExp("\""), 'g'), "");
         File.find({course_id: course_id, theme_id: theme_id}, function (err, files) {
@@ -44,7 +44,7 @@ exports.getFilesForThemeAdmin = function (request, response) {
 };
 
 exports.getFilesForThemeStudent = function (request, response) {
-    securityController.getSessionUser(request, response, function () {
+    securityService.isSessionUser(request, response, false).then(function () {
         const course_id = request.query["course_id"].replace(new RegExp(new RegExp("\""), 'g'), "");
         const theme_id = request.query["theme_id"].replace(new RegExp(new RegExp("\""), 'g'), "");
         File.find({course_id: course_id, theme_id: theme_id}, function (err, files) {
@@ -63,7 +63,7 @@ exports.getFilesForThemeStudent = function (request, response) {
 };
 
 exports.uploadFile = function (request, response) {
-    securityController.isSessionUserAdmin(request, response, function () {
+    securityService.isSessionUser(request, response, true).then(function () {
         if (!request.files) {
             response.send("Keine Datei ausgewählt");
         } else {
@@ -96,7 +96,7 @@ exports.uploadFile = function (request, response) {
 };
 
 exports.deleteFile = function (request, response) {
-    securityController.isSessionUserAdmin(request, response, function () {
+    securityService.isSessionUser(request, response, true).then(function () {
         //TODO fixme
     });
 };

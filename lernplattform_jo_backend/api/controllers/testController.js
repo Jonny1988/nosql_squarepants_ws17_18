@@ -1,5 +1,5 @@
 const path = require('path');
-const securityController = require('../services/securityService');
+const securityService = require('../services/securityService');
 const mongoose = require('mongoose');
 
 require('../models/MCT');
@@ -8,7 +8,7 @@ require('../models/Result');
 const Result = mongoose.model('result');
 
 exports.createTest = function (request, response) {
-    securityController.isSessionUserAdmin(request, response, function () {
+    securityService.isSessionUser(request, response, true).then(function () {
         MCT.find({}, function (err, test) {
             if (err || test) {
                 response.sendStatus(500);
@@ -36,7 +36,7 @@ exports.createTest = function (request, response) {
 };
 
 exports.updateTest = function (request, response) {
-    securityController.isSessionUserAdmin(request, response, function () {
+    securityService.isSessionUser(request, response, true).then(function () {
         const form = request.body;
         let publishedFrom = new Date(form.publishedFrom);
         let publishedUntil = new Date(form.publishedFrom);
@@ -59,7 +59,7 @@ exports.updateTest = function (request, response) {
 }
 
 exports.deleteTest = function (request, response) {
-    securityController.isSessionUserAdmin(request, response, function () {
+    securityService.isSessionUser(request, response, true).then(function () {
         MCT.remove({_id: request.body._id}, function (err) {
             if (err)
                 response.sendStatus(500);
@@ -69,7 +69,7 @@ exports.deleteTest = function (request, response) {
 };
 
 exports.getTestsForCourseAdmin = function (request, response) {
-    securityController.isSessionUserAdmin(request, response, function () {
+    securityService.isSessionUser(request, response, true).then(function () {
         const course_id = request.query["course_id"].replace(new RegExp(new RegExp("\""), 'g'), "");
         MCT.find({course_id: course_id}, function (err, tests) {
             if (err)
@@ -80,7 +80,7 @@ exports.getTestsForCourseAdmin = function (request, response) {
 };
 
 exports.getTestsForCourseStudent = function (request, response) {
-    securityController.getSessionUser(request, response, function () {
+    securityService.isSessionUser(request, response, false).then(function () {
         const course_id = request.query["course_id"].replace(new RegExp(new RegExp("\""), 'g'), "");
         MCT.find({course_id: course_id}, function (err, tests) {
             if (err)
@@ -99,7 +99,7 @@ exports.getTestsForCourseStudent = function (request, response) {
 };
 
 exports.getResultsForAdmin = function (request, response) {
-    securityController.isSessionUserAdmin(request, response, function () {
+    securityService.isSessionUser(request, response, true).then(function () {
         const test_id = request.query["test_id"].replace(new RegExp(new RegExp("\""), 'g'), "");
         Result.find({test_id: test_id}, function (err, results) {
             if (err)
@@ -110,7 +110,7 @@ exports.getResultsForAdmin = function (request, response) {
 };
 
 exports.getResultsForStudent = function (request, response) {
-    securityController.getSessionUser(request, response, function () {
+    securityService.isSessionUser(request, response, false).then(function () {
         const course_id = request.query["course_id"].replace(new RegExp(new RegExp("\""), 'g'), "");
         const test_id = request.query["test_id"].replace(new RegExp(new RegExp("\""), 'g'), "");
         const student = request.query["student"].replace(new RegExp(new RegExp("\""), 'g'), "");
@@ -122,10 +122,9 @@ exports.getResultsForStudent = function (request, response) {
 
 
 exports.saveStudentTestResult = function (request, response) {
-    securityController.getSessionUser(request, response, function () {
+    securityService.isSessionUser(request, response, false).then(function (isAdmin, username) {
         const course_id = request.body.course_id;
         const test_id = request.body.test_id;
-        const username = request.session.username;
         const answers = request.body;
         Result.find({
             course_id: course_id,
