@@ -138,3 +138,8 @@ exports.getCoursesForStudent = function (request, response) {
         });
     });
 };
+
+exports.getCourse = function (request, response) {
+    // TODO
+    // navigateToView(request, response, 'course/'+request.params.coursename );
+};

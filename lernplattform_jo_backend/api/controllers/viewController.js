@@ -15,14 +15,19 @@ navigateToView = function (request, response, viewname) {
 };
 
 exports.getLoginView = function (request, response) {
-    response.sendFile(path.join(__dirname + '/views/login.html'));
+    response.render('login');
 };
 
-exports.getRegisterView = function (request, response) {
-    this.getLoginView(request, response);
-};
 exports.getOverview = function (request, response) {
-    navigateToView(request, response, 'index');
+    securityService.getSessionUser(request).then(function (user) {
+        if (user.isAdmin)
+            response.render('admin/index.ejs', user);
+        else
+            response.render('student/index.ejs', user);
+    }).catch(function(err) {
+        console.log(err);
+        response.sendStatus(403);
+    });
 };
 exports.getCourseC = function (request, response) {
     navigateToView(request, response, 'createCourse');
@@ -33,4 +38,6 @@ exports.getCourseU = function (request, response) {
 exports.getCourseD = function (request, response) {
     navigateToView(request, response, 'deleteCourse');
 };
-
+exports.getCourse = function (request, response) {
+    navigateToView(request, response, 'course/'+request.params.coursename );
+};

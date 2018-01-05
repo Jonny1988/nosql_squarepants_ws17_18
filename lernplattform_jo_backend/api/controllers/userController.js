@@ -101,3 +101,19 @@ exports.getLoggedInUser = function(request, response) {
         response.sendStatus(500);
     })
 }
+
+exports.getLoginView = function (request, response) {
+    response.render('login');
+};
+
+exports.getOverview = function (request, response) {
+    securityService.getSessionUser(request).then(function (user) {
+        if (user.isAdmin)
+            response.render('admin/index', { user: user});
+        else
+            response.render('student/index', { user: user});
+    }).catch(function(err) {
+        console.log(err);
+        response.sendStatus(403);
+    });
+};

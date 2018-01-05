@@ -9,6 +9,7 @@ module.exports = function (app) {
     app.route('/course/admin/students/remove/').post(courseController.removeStudentsFromCourse);
     app.route('/course/admin/students/').get(courseController.getStudentsFromCourse);
     app.route('/courses/student/').get(courseController.getCoursesForStudent);
+    app.route('/course/:coursename').get(courseController.getCourse);
 
     const themeController = require('../controllers/themeController');
     app.route('/theme/').post(themeController.createTheme);
@@ -24,11 +25,9 @@ module.exports = function (app) {
     app.route('/logout/').get(userController.logout);
     app.route('/students/').get(userController.getAllStudents);
     app.route('/user/get/').get(userController.getLoggedInUser);
-
-    const viewController = require('../controllers/viewController');
-    app.route('/login/').get(viewController.getLoginView);
-    app.route('/').get(viewController.getLoginView);
-    app.route('/index/').get(viewController.getOverview);
+    app.route('/login/').get(userController.getLoginView);
+    app.route('/').get(userController.getLoginView);
+    app.route('/index/').get(userController.getOverview);
 
     const fileController = require('../controllers/fileController');
     app.route('/file/delete/').get(fileController.deleteFile);

@@ -25,6 +25,7 @@
         </ul>
     </div>
     <span data-display="username" class="navbar-text" style="margin-right: 10px">
+        <%= user.username %>
     </span>
     <form class="form-inline">
         <a class="btn btn-dark" type="button" href="/logout">Ausloggen</a>
@@ -32,19 +33,28 @@
 </nav>
 
 <div class="container">
-    <h1> Willkommen <span data-display="username"></span>
-    </h1>
+    <h1> Willkommen <span data-display="username"></span></h1>
+    <h3>Ihre Kurse</h3>
+    <div data-display="courses" class="list-group">
+        <a href="#" class="list-group-item list-group-item-action list-group-item-success">
+            Neuen Kurs anlegen
+        </a>
+    </div>
 </div>
 </body>
 <script>
     $(function(){
-        var user;
-        $.get("/user/get", function(returnedUser) {
-            user = returnedUser;
-            $('[data-display="username"]').html(user.username);
+        const courseTemplate = ({ coursename}) => `
+          <a href="/course/${coursename}" class="list-group-item list-group-item-action">
+            ${coursename}
+          </a>
+        `;
+
+        $.get("/user/get", function(user) {
+           // $('[data-display="username"]').html(user.username);
         })
         $.get("/courses", function (courses) {
-           console.log(courses);
+            $('[data-display="courses"]').prepend(courses.map(courseTemplate).join(''));
         });
     });
 </script>
