@@ -1,0 +1,13 @@
+<div class="col-lg-4" style="margin-bottom: 20px">
+    <div class="card">
+        <div class="card-header">
+            <%= theme.themename %>
+        </div>
+        <div class="card-body">
+            <% for(var i=0; i< theme.files.length; i++) {%>
+                <%= theme.files.filename %>
+            <% } %>
+            <div class="btn btn-primary">Datei hochladen</div>
+        </div>
+    </div>
+</div>

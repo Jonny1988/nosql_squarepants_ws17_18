@@ -155,7 +155,6 @@ exports.getCourse = function (request, response) {
             populate: { path: 'files' }
         }).
         exec().then(function(course) {
-            console.log(course);
             if (user.isAdmin)
                 response.render('course', { user: user, course: course});
             // TODO was ist mit students ?

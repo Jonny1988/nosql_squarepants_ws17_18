@@ -9,6 +9,32 @@
     <script src="/js/bootstrap.min.js"></script>
 </head>
 <body>
+<!-- Modal -->
+<div class="modal fade" id="createThemeModal" tabindex="-1" role="dialog" aria-labelledby="createThemeModal" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Thema erstellen</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="createThemeForm" method="post" action="/theme">
+                <div class="modal-body">
+                    <input tpye="hidden" name="coursename" value="<%= course.coursename %>">
+                    <div class="form-group">
+                        <label for="themename">Themenname</label>
+                        <input class="form-control" type="text" id="themename" name="themename"/>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Schließen</button>
+                    <button class="btn btn-primary" type="submit">Thema anlegen</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 <nav id="nav" class="navbar navbar-expand-lg navbar-dark bg-primary justify-content-between">
     <a class="navbar-brand" href="#">Lernplattform</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -33,7 +59,26 @@
 </nav>
 
 <div class="container">
-   Dieser Kurs kommt vom <%= course.owner %> mit der id <%= course._id %>
+    <div class="jumbotron">
+        <h1>Kurs <%= course.coursename %></h1>
+        <p>bei Prof. <%= course.owner %></p>
+        <% if (course.description.length > 0) {%>
+            <p><%= course.description %></p>
+        <% }%>
+    </div>
+    <div class="row">
+        <% for(var i=0; i< course.themes.length; i++) {%>
+            <%- include("snippets/themeCard", {theme: course.themes[i]}) %>
+        <% } %>
+        <div class="col-lg-4">
+            <div class="list-group">
+                <a href="" class="list-group-item list-group-item-action list-group-item-success" data-toggle="modal" data-target="#createThemeModal">
+                    Neues Thema hinzufügen
+                </a>
+            </div>
+        </div>
+    </div>
+
 </div>
 </body>
 <script>

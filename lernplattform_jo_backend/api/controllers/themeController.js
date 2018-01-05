@@ -8,23 +8,34 @@ const Course = mongoose.model('course');
 
 exports.createTheme = function (request, response) {
     securityService.isSessionUser(request, response, true).then(function () {
-        const course_id = request.body.course_id;
-        const themename = request.body.themename;
-        Theme.findOne({course_id: course_id, themename: themename}, function (err, theme) {
-            if(err)
-                response.sendStatus(500);
-            if (!theme) {
-                var theme = new Theme({
-                    course_id: course_id,
-                    themename: themename
-                });
-                theme.save();
-                response.sendStatus(201);
-            } else {
-                console.log("Das Thema " + themename + " existiert bereits für den Kurs " + course_id);
-                response.sendStatus(500);
+        Course.findOne({coursename: request.body.coursename}).
+        populate({
+            path: 'themes'
+        }).
+        exec().then(function(course) {
+            var foundSameName = false;
+            for(var i= 0; i < course.themes.length; i++) {
+                if (course.themes[i].themename == request.body.themename) {
+                    foundSameName = true;
+                    break
+                }
             }
-        })
+            if (foundSameName)
+                return response.send("Es gibt bereits ein Thema mit diesem Namen");
+
+            var theme = new Theme({
+                themename: request.body.themename
+            });
+            theme.save();
+            course.themes.push(theme);
+            course.save(function (err) {
+                if (err) return response.sendStatus(500);
+                response.redirect("/course/"+request.body.coursename);
+            });
+
+        }).catch(function () {
+           return response.sendStatus(500);
+        });
     })
 };
 

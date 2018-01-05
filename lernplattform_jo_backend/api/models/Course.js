@@ -7,6 +7,6 @@ const CourseSchema = new Schema({
     coursename: String,
     themes: [{ type: Schema.Types.ObjectId, ref: 'theme' }],
     students : Array
-});
+}, { usePushEach: true });
 
 mongoose.model('course', CourseSchema);
