@@ -35,16 +35,37 @@
 <div class="container">
     <h1> Willkommen <%= user.username %></h1>
     <h3>Ihre Kurse</h3>
-    <div data-display="courses" class="list-group">
-        <% for(var i=0; i<courses.length; i++) {%>
-            <a href="/course/<%= courses[i].coursename %>" class="list-group-item list-group-item-action">
-                <%= courses[i].coursename %>
-            </a>
+    <div class="row">
+        <% if (courses.length > 0) {%>
+            <div class="col-lg-6">
+                <div class="list-group">
+                    <% for(var i=0; i<courses.length; i++) {%>
+                    <a href="/course/<%= courses[i].coursename %>" class="list-group-item list-group-item-action">
+                        <%= courses[i].coursename %>
+                    </a>
+                    <% } %>
+                </div>
+            </div>
         <% } %>
-        <a href="#" class="list-group-item list-group-item-action list-group-item-success">
-            Neuen Kurs anlegen
-        </a>
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-body">
+                    <form method="post" action="/course">
+                        <div class="form-group">
+                            <label for="coursename">Titel</label>
+                            <input class="form-control" type="text" id="coursename" name="coursename" placeholder="Titel"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="description">Beschreibung</label>
+                            <textarea class="form-control" type="textfield" id="description" name="description" placeholder="Beschreibung"></textarea>
+                        </div>
+                        <button class="btn btn-primary" id="saveCourse">Kurs anlegen</button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
+
 </div>
 </body>
 <script>

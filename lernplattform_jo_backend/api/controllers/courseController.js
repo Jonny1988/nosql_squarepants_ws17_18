@@ -27,7 +27,7 @@ exports.createCourse = function (request, response) {
                     coursename: coursename
                 });
                 course.save();
-                response.sendStatus(201);
+                response.redirect("/index");
             }
         });
     });
