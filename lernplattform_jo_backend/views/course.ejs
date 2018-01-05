@@ -10,31 +10,8 @@
 </head>
 <body>
 <!-- Modal -->
-<div class="modal fade" id="createThemeModal" tabindex="-1" role="dialog" aria-labelledby="createThemeModal" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Thema erstellen</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form id="createThemeForm" method="post" action="/theme">
-                <div class="modal-body">
-                    <input tpye="hidden" name="coursename" value="<%= course.coursename %>">
-                    <div class="form-group">
-                        <label for="themename">Themenname</label>
-                        <input class="form-control" type="text" id="themename" name="themename"/>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Schließen</button>
-                    <button class="btn btn-primary" type="submit">Thema anlegen</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
+<%- include("snippets/modalCreateTheme", {course: course}) %>
+<%- include("snippets/modalUploadFile", {course: course}) %>
 <nav id="nav" class="navbar navbar-expand-lg navbar-dark bg-primary justify-content-between">
     <a class="navbar-brand" href="#">Lernplattform</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -72,7 +49,7 @@
         <% } %>
         <div class="col-lg-4">
             <div class="list-group">
-                <a href="" class="list-group-item list-group-item-action list-group-item-success" data-toggle="modal" data-target="#createThemeModal">
+                <a href="" class="list-group-item list-group-item-action list-group-item-success" data-toggle="modal" data-target="#modalCreateTheme">
                     Neues Thema hinzufügen
                 </a>
             </div>
@@ -82,7 +59,12 @@
 </div>
 </body>
 <script>
-    $(document).ready(function () {;
+    $(document).ready(function () {
+        $('[data-file-upload]').click(function() {
+            // Schreibe im Modal rein für welches thema etwas hochgeladen werden soll
+            $('#modalUploadFile input[name="themename"]').val($(this).data('file-upload'));
+            $('#modalUploadFile').modal("show");
+        });
     });
 </script>
 </html>

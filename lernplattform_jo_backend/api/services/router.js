@@ -32,9 +32,7 @@ module.exports = function (app) {
     const fileController = require('../controllers/fileController');
     app.route('/file/delete/').get(fileController.deleteFile);
     app.route('/file/upload/').post(fileController.uploadFile);
-    app.route('/file/admin/download/').post(fileController.downloadFileAdmin);
-    app.route('/file/student/download/').post(fileController.downloadFileStudent);
-    app.route('/files/admin/').get(fileController.getFilesForThemeAdmin);
+    app.route('/file/download/').get(fileController.downloadFile);
     app.route('/files/student/').get(fileController.getFilesForThemeStudent);
 
 

@@ -5,9 +5,11 @@
         </div>
         <div class="card-body">
             <% for(var i=0; i< theme.files.length; i++) {%>
-                <%= theme.files.filename %>
+            <a href="/file/download?id=<%= theme.files[i]._id %>"><%= theme.files[i].filename %></a>,
+
             <% } %>
-            <div class="btn btn-primary">Datei hochladen</div>
+            <hr>
+            <div data-file-upload="<%= theme.themename %>" class="btn btn-primary">Datei hochladen</div>
         </div>
     </div>
 </div>

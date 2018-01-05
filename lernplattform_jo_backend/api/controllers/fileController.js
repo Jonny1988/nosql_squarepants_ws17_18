@@ -1,44 +1,32 @@
 const path = require('path');
 const securityService = require('../services/securityService');
-const fileUpload = require('express-fileupload');
 const mongoose = require('mongoose');
+require('../models/Theme');
+const Theme = mongoose.model('theme');
+
+var fileDir = path.dirname(require.main.filename)+ '/files/';
+
+function getFilePath(file) {
+    return path.join(fileDir + file._id + "_" + file.filename);
+}
 
 
 require('../models/File');
 const File = mongoose.model('file');
-const ObjectId = require('mongodb').ObjectId;
 
-exports.downloadFileAdmin = function (request, response) {
-    securityService.isSessionUser(request, response, true).then(function () {
-        const _id = request.query["_id"].replace(new RegExp(new RegExp("\""), 'g'), "");
-        response.sendFile(path.join(__dirname + '/files/' + _id));
-    });
-};
-
-exports.downloadFileStudent = function (request, response) {
-    securityService.isSessionUser(request, response, false).then(function () {
-        const _id = request.query["_id"].replace(new RegExp(new RegExp("\""), 'g'), "");
-        File.find({_id: _id}, function (err, file) {
-            if (err)
-                response.sendStatus(500);
-            if (file && file.publishedFrom <= Date.now() && file.publishedUntil >= Date.now()) {
-                response.sendFile(path.join(__dirname + '/files/' + _id));
+exports.downloadFile = function (request, response) {
+    securityService.getSessionUser(request).then(function (user) {
+        const id = request.query["id"].replace(new RegExp(new RegExp("\""), 'g'), "");
+        File.findOne({_id: id}, function (err, file) {
+            if (err || !file)
+                return response.sendStatus(500);
+            if (user.isAdmin)
+                return response.sendFile(getFilePath(file));
+            if (file.publishedFrom <= Date.now() && file.publishedUntil >= Date.now()) {
+                return response.sendFile(getFilePath(file));
             } else {
-                console.log("Der Zugriff auf diese Datei ist nicht möglich");
-                response.sendStatus(500)
+                return response.sendStatus(500)
             }
-        });
-    });
-};
-
-exports.getFilesForThemeAdmin = function (request, response) {
-    securityService.isSessionUser(request, response, true).then(function () {
-        const course_id = request.query["course_id"].replace(new RegExp(new RegExp("\""), 'g'), "");
-        const theme_id = request.query["theme_id"].replace(new RegExp(new RegExp("\""), 'g'), "");
-        File.find({course_id: course_id, theme_id: theme_id}, function (err, files) {
-            if (err)
-                response.sendStatus(500);
-            response.send(files);
         });
     });
 };
@@ -64,9 +52,10 @@ exports.getFilesForThemeStudent = function (request, response) {
 
 exports.uploadFile = function (request, response) {
     securityService.isSessionUser(request, response, true).then(function () {
-        if (!request.files) {
-            response.send("Keine Datei ausgewählt");
-        } else {
+        if (!request.files || !request.files.file)
+            return response.send("Keine Datei ausgewählt");
+        Theme.findOne({themename: request.body.themename}, function (err, theme) {
+            if (err || !theme) return response.sendStatus(500);
             var filename = request.files.file.name;
             filename = filename.replace(new RegExp(new RegExp(" "), 'g'), "");
             var publishedFrom = new Date(request.body.publishedFrom);
@@ -74,24 +63,25 @@ exports.uploadFile = function (request, response) {
             publishedFrom.setMinutes(0);
             publishedFrom.setHours(0);
             publishedFrom.setSeconds(0);
-            publishedUntil.setMinutes(23), publishedUntil.setHours(59);
+            publishedUntil.setMinutes(23);
+            publishedUntil.setHours(59);
             publishedUntil.setSeconds(59);
             const file = new File({
-                course_id: request.body.course_id,
-                theme_id: request.body.theme_id,
                 filename: filename,
                 publishedFrom: publishedFrom,
                 publishedUntil: publishedUntil
             });
             const sampleFile = request.files.file;
-
             file.save();
-            sampleFile.mv(path.join(__dirname + "/files/" + file._id), function (err) {
-                if (err)
-                    response.sendStatus(500);
-                response.sendStatus(201);
+            theme.files.push(file);
+            theme.save(function (err) {
+                if (err) return response.sendStatus(500);
+                sampleFile.mv(getFilePath(file), function (err) {
+                    if (err) return response.sendStatus(500);
+                    response.redirect("/course/" + request.body.coursename);
+                });
             });
-        }
+        });
     });
 };
 

@@ -1,0 +1,25 @@
+<div class="modal fade" id="modalCreateTheme" tabindex="-1" role="dialog" aria-labelledby="modalCreateTheme" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Thema erstellen</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="post" action="/theme">
+                <div class="modal-body">
+                    <input type="hidden" name="coursename" value="<%= course.coursename %>">
+                    <div class="form-group">
+                        <label for="themename">Themenname</label>
+                        <input class="form-control" type="text" name="themename"/>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Schließen</button>
+                    <button class="btn btn-primary" type="submit">Thema anlegen</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
