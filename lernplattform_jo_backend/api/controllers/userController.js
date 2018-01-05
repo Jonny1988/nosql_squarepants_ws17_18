@@ -4,6 +4,9 @@ const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const con = databaseConnection.getCon();
 
+// TODO
+// der Controller sollte keine Ahnung haben von der databaseconnection
+// Dies sollte im securityService follends übernommen werden
 exports.login = function (request, response) {
     const username = request.body.username;
     const password = request.body.password;
@@ -28,6 +31,9 @@ exports.login = function (request, response) {
     });
 };
 
+// TODO
+// der Controller sollte keine Ahnung haben von der databaseconnection
+// Dies sollte im securityService follends übernommen werden
 exports.createUser = function (request, response) {
     if (request.body.password === request.body.passwordConf) {
         const user = request.body;
@@ -69,6 +75,8 @@ exports.createUser = function (request, response) {
     }
 };
 
+// TODO
+// Auch dies sollte fraglich an den security Service übergeben werden
 exports.logout = function (request, response) {
     request.session.destroy();
     response.sendStatus(200);

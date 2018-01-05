@@ -32,6 +32,9 @@ exports.getSessionUser = function (request) {
     });
 };
 
+// TODO
+// Dies hat nciht wirklich was mit dem securitySerrvice zu tun.
+// Es ist eher eine Funktion die ein ein Utils oder so reingehört.
 /**
  * Hollt sich den derzeitigen User in der Session und wirft
  * eine response.sendStatus 500 wenn dieser nicht existiert.
