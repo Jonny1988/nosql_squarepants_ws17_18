@@ -1,8 +1,11 @@
 const securityService = require("../services/securityService")
 const databaseConnection = require("../dbconnection/mariasql")
+const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const con = databaseConnection.getCon();
+require('../models/Course');
+const Course = mongoose.model('course');
 
 // TODO
 // der Controller sollte keine Ahnung haben von der databaseconnection
@@ -106,12 +109,26 @@ exports.getLoginView = function (request, response) {
     response.render('login');
 };
 
+function getOverviewForAdmin(user, response) {
+    var data = {user: user};
+    Course.find({owner: user.username},
+        function (err, courses) {
+            if (err || !courses)
+                response.sendStatus(500);
+            else {
+                data.courses = courses;
+                response.render('admin/index', data);
+            }
+        });
+}
+
 exports.getOverview = function (request, response) {
     securityService.getSessionUser(request).then(function (user) {
-        if (user.isAdmin)
-            response.render('admin/index', { user: user});
-        else
+        if (user.isAdmin) {
+            getOverviewForAdmin(user, response);
+        } else {
             response.render('student/index', { user: user});
+        }
     }).catch(function(err) {
         console.log(err);
         response.sendStatus(403);
