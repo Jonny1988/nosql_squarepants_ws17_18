@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const ThemeSchema = new Schema({
     themename: String,
-    course_id: Schema.Types.ObjectId
+    files: [{ type: Schema.Types.ObjectId, ref: 'file' }],
 });
 
 

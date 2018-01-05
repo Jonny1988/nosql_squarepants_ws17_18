@@ -21,11 +21,18 @@ exports.createCourse = function (request, response) {
                 response.send("Der Kurs " + coursename + " existiert bereits!")
                 //response.sendStatus(500);
             } else {
+                var defaultTheme = new Theme({
+                    _id: new mongoose.Types.ObjectId(),
+                    themename: 'Default'
+                });
+                defaultTheme.save();
                 const course = new Course({
                     owner: user.username,
                     description: request.body.description,
                     coursename: coursename
                 });
+                course.themes.push(defaultTheme);
+
                 course.save();
                 response.redirect("/index");
             }
@@ -139,14 +146,22 @@ exports.getCoursesForStudent = function (request, response) {
     });
 };
 
+
 exports.getCourse = function (request, response) {
     securityService.getSessionUser(request).then(function (user) {
-        Course.findOne({coursename: request.params.coursename}, function (err, course) {
-            if (err || !course)
-                response.sendStatus(500);
-            else {
+        Course.findOne({coursename: request.params.coursename}).
+        populate({
+            path: 'themes',
+            populate: { path: 'files' }
+        }).
+        exec().then(function(course) {
+            console.log(course);
+            if (user.isAdmin)
                 response.render('course', { user: user, course: course});
-            }
+            // TODO was ist mit students ?
+        }).catch(function(err) {
+            console.error(err);
+            return response.sendStatus(403);
         });
     }).catch(function() {
         response.sendStatus(403);

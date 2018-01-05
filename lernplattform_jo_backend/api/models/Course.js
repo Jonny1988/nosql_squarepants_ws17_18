@@ -5,6 +5,7 @@ const CourseSchema = new Schema({
     owner: String,
     description: String,
     coursename: String,
+    themes: [{ type: Schema.Types.ObjectId, ref: 'theme' }],
     students : Array
 });
 
