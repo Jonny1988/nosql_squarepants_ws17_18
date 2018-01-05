@@ -14,6 +14,7 @@ port = process.env.PORT || 3000;
 // default options
 app.use(fileUpload());
 app.use(express.static('public'));
+app.set('view engine', 'ejs');
 
 //session management
 var options = {
@@ -58,7 +59,7 @@ mongoose.connect('mongodb://localhost/lernplatform', {
     .then(() => console.log('MongoDB Connectec...'))
 .catch(err => console.log(err));
 //routes
-var router = require('./api/routes/router');
+var router = require('./api/services/router');
 
 router(app);
 
