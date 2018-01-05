@@ -49,7 +49,7 @@ exports.getSessionUser = function (request) {
  */
 exports.isSessionUser = function(request, response, checkForAdmin) {
     return new Promise(function(resolve, reject) {
-        this.getSessionUser(request).then(function (user) {
+        exports.getSessionUser(request).then(function (user) {
             if (!checkForAdmin || user.isAdmin)
                 resolve(user);
             else {
