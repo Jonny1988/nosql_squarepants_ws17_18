@@ -110,15 +110,24 @@ exports.getLoginView = function (request, response) {
 };
 
 function getOverviewForAdmin(user, response) {
-    var data = {user: user};
+    let data = {user: user};
     Course.find({owner: user.username},
         function (err, courses) {
             if (err || !courses)
-                response.sendStatus(500);
-            else {
-                data.courses = courses;
-                response.render('admin/index', data);
-            }
+                return response.sendStatus(500);
+            data.courses = courses;
+            response.render('admin/index', data);
+        });
+}
+
+function getOverviewForStudent(user, response) {
+    let data = {user: user};
+    Course.find({students: user.username},
+        function (err, courses) {
+            if (err || !courses)
+                return response.sendStatus(500);
+            data.courses = courses;
+            response.render('student/index', data);
         });
 }
 
@@ -127,7 +136,7 @@ exports.getOverview = function (request, response) {
         if (user.isAdmin) {
             getOverviewForAdmin(user, response);
         } else {
-            response.render('student/index', { user: user});
+            getOverviewForStudent(user, response);
         }
     }).catch(function(err) {
         console.log(err);

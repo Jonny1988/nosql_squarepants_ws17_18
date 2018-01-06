@@ -21,9 +21,9 @@ exports.getLoginView = function (request, response) {
 exports.getOverview = function (request, response) {
     securityService.getSessionUser(request).then(function (user) {
         if (user.isAdmin)
-            response.render('admin/index.ejs', user);
+            response.render('admin/index', user);
         else
-            response.render('student/index.ejs', user);
+            response.render('student/index', user);
     }).catch(function(err) {
         console.log(err);
         response.sendStatus(403);

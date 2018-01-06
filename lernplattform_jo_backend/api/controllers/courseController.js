@@ -160,7 +160,8 @@ exports.getCourse = function (request, response) {
         exec().then(function(course) {
             if (user.isAdmin)
                 response.render('admin/course', { user: user, course: course});
-            // TODO was ist mit students ?
+            else
+                response.render('student/course', { user: user, course: course});
         }).catch(function(err) {
             console.error(err);
             return response.sendStatus(403);

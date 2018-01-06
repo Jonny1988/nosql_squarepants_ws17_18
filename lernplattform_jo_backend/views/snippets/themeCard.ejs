@@ -8,8 +8,10 @@
             <a href="/file/download?id=<%= theme.files[i]._id %>"><%= theme.files[i].filename %></a>,
 
             <% } %>
-            <hr>
-            <div data-file-upload="<%= theme.themename %>" class="btn btn-primary">Datei hochladen</div>
+            <% if(user.isAdmin) { %>
+                <hr>
+                <div data-file-upload="<%= theme.themename %>" class="btn btn-primary">Datei hochladen</div>
+            <% } %>
         </div>
     </div>
 </div>
