@@ -86,13 +86,13 @@ exports.logout = function (request, response) {
 };
 
 exports.getAllStudents = function(request, response){
-    securityService.isSessionUser(request, response, false).then(function () {
-        const getAllStudents = "Select * from users where role =" + 37 + ";";
-        con.query(getAllStudents, function (err, availableStudents) {
+    securityService.isSessionUser(request, response, true).then(function () {
+        const getAllStudents = "Select username from users where role =" + 37 + ";";
+        con.query(getAllStudents, function (err, students) {
             if(err)
                 response.sendStatus(500);
             else
-                response.send(availableStudents);
+                response.send(students);
         });
     })
 };

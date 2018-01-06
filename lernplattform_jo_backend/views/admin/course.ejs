@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <link rel="stylesheet" href="/css/library/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/library/font-awesome.min.css">
     <link rel="stylesheet" href="/css/main.css">
     <script src="/js/jquery-3.2.1.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
@@ -12,6 +13,7 @@
 <!-- Modal -->
 <%- include("../snippets/modalCreateTheme", {course: course}) %>
 <%- include("../snippets/modalUploadFile", {course: course}) %>
+<%- include("../snippets/modalEditStudentList", {course: course}) %>
 <nav id="nav" class="navbar navbar-expand-lg navbar-dark bg-primary justify-content-between">
     <a class="navbar-brand" href="#">Lernplattform</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -43,6 +45,9 @@
             <p><%= course.description %></p>
         <% }%>
     </div>
+    <h3><%= course.students.length %> Teilnehmer
+        <a href="#" data-toggle="modal" data-target="#modalEditStudentList"><span class="fa fa-pencil"></span></a>
+    </h3>
     <h3>Themen</h3>
     <div class="row">
         <% for(var i=0; i< course.themes.length; i++) {%>

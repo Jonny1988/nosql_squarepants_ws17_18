@@ -6,7 +6,7 @@ module.exports = function (app) {
     app.route('/course/update/').post(courseController.updateCourse);
     app.route('/course/delete/').post(courseController.deleteCourse);
     app.route('/courses/').get(courseController.getAdminCourses);
-    app.route('/course/admin/students/').post(courseController.addStudentsToCourse);
+    app.route('/course/update/students/').post(courseController.updateStudents);
     app.route('/course/admin/students/remove/').post(courseController.removeStudentsFromCourse);
     app.route('/course/admin/students/').get(courseController.getStudentsFromCourse);
     app.route('/courses/student/').get(courseController.getCoursesForStudent);

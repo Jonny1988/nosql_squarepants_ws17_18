@@ -67,19 +67,19 @@ exports.updateCourse = function (request, response) {
             coursename: request.body.coursename
         }, function (err) {
             if (err)
-                response.sendStatus(500);
-            response.sendStatus(201);
+                return response.sendStatus(500);
+            response.redirect("/course/"+request.body.coursename);
         });
     });
 };
 
-exports.addStudentsToCourse = function (request, response) {
+exports.updateStudents = function (request, response) {
     securityService.isSessionUser(request, response, true).then(function () {
-        Course.findOneAndUpdate({_id: request.body._id},
-            {students: request.body.students}, function (err) {
+        Course.findOneAndUpdate({coursename: request.body.coursename},
+            {students: request.body.student}, function (err) {
                 if (err)
-                    response.sendStatus(500);
-                response.sendStatus(201);
+                    return response.sendStatus(500);
+                response.redirect("/course/"+request.body.coursename);
             });
     });
 };
