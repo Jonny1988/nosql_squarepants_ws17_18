@@ -6,6 +6,7 @@ const CourseSchema = new Schema({
     description: String,
     coursename: String,
     themes: [{ type: Schema.Types.ObjectId, ref: 'theme' }],
+    tests: [{ type: Schema.Types.ObjectId, ref: 'mct' }],
     students : Array
 }, { usePushEach: true });
 

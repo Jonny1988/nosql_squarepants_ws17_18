@@ -10,8 +10,8 @@
 </head>
 <body>
 <!-- Modal -->
-<%- include("snippets/modalCreateTheme", {course: course}) %>
-<%- include("snippets/modalUploadFile", {course: course}) %>
+<%- include("../snippets/modalCreateTheme", {course: course}) %>
+<%- include("../snippets/modalUploadFile", {course: course}) %>
 <nav id="nav" class="navbar navbar-expand-lg navbar-dark bg-primary justify-content-between">
     <a class="navbar-brand" href="#">Lernplattform</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -43,9 +43,10 @@
             <p><%= course.description %></p>
         <% }%>
     </div>
+    <h3>Themen</h3>
     <div class="row">
         <% for(var i=0; i< course.themes.length; i++) {%>
-            <%- include("snippets/themeCard", {theme: course.themes[i]}) %>
+            <%- include("../snippets/themeCard", {theme: course.themes[i]}) %>
         <% } %>
         <div class="col-lg-4">
             <div class="list-group">
@@ -55,7 +56,16 @@
             </div>
         </div>
     </div>
-
+    <hr>
+    <h3>Tests</h3>
+    <div>
+        <% course.tests.forEach(function(test){ %>
+            <a href=""><%= test.testname %></a><br>
+        <% }); %>
+    </div>
+    <a href="<%= course.coursename %>/test" class="btn btn-success">
+        Neuen Test erstellen
+    </a>
 </div>
 </body>
 <script>

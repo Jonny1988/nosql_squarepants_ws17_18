@@ -1,6 +1,7 @@
 module.exports = function (app) {
 
     const courseController = require('../controllers/courseController');
+    const testController = require("../controllers/testController");
     app.route('/course/').post(courseController.createCourse);
     app.route('/course/update/').post(courseController.updateCourse);
     app.route('/course/delete/').post(courseController.deleteCourse);
@@ -10,6 +11,7 @@ module.exports = function (app) {
     app.route('/course/admin/students/').get(courseController.getStudentsFromCourse);
     app.route('/courses/student/').get(courseController.getCoursesForStudent);
     app.route('/course/:coursename').get(courseController.getCourse);
+    app.route('/course/:coursename/test').get(testController.getCreateTestView);
 
     const themeController = require('../controllers/themeController');
     app.route('/theme/').post(themeController.createTheme);
@@ -36,14 +38,15 @@ module.exports = function (app) {
     app.route('/files/student/').get(fileController.getFilesForThemeStudent);
 
 
-    const mtcController = require("../controllers/testController");
-    app.route('/test/create/').post(mtcController.createTest);
-    app.route('/test/update/').post(mtcController.updateTest);
-    app.route('/test/delete/').post(mtcController.deleteTest);
-    app.route('/tests/admin/').get(mtcController.getTestsForCourseAdmin);
-    app.route('/tests/student/').get(mtcController.getTestsForCourseStudent);
-    app.route('/test/result/').post(mtcController.saveStudentTestResult);
-    app.route('/test/result/admin/').get(mtcController.getResultsForAdmin);
-    app.route('/test/result/student/').get(mtcController.getResultsForStudent);
+
+
+    app.route('/test/').post(testController.createTest);
+    app.route('/test/update/').post(testController.updateTest);
+    app.route('/test/delete/').post(testController.deleteTest);
+    app.route('/tests/admin/').get(testController.getTestsForCourseAdmin);
+    app.route('/tests/student/').get(testController.getTestsForCourseStudent);
+    app.route('/test/result/').post(testController.saveStudentTestResult);
+    app.route('/test/result/admin/').get(testController.getResultsForAdmin);
+    app.route('/test/result/student/').get(testController.getResultsForStudent);
 
 };

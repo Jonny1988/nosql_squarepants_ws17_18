@@ -19,7 +19,6 @@ exports.createCourse = function (request, response) {
                 response.sendStatus(500);
             if (data) {
                 response.send("Der Kurs " + coursename + " existiert bereits!")
-                //response.sendStatus(500);
             } else {
                 var defaultTheme = new Theme({
                     _id: new mongoose.Types.ObjectId(),
@@ -154,9 +153,13 @@ exports.getCourse = function (request, response) {
             path: 'themes',
             populate: { path: 'files' }
         }).
+        populate({
+            path: 'tests',
+            populate: { path: 'questions'}
+        }).
         exec().then(function(course) {
             if (user.isAdmin)
-                response.render('course', { user: user, course: course});
+                response.render('admin/course', { user: user, course: course});
             // TODO was ist mit students ?
         }).catch(function(err) {
             console.error(err);

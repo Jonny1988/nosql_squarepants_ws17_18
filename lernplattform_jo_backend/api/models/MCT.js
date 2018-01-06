@@ -3,10 +3,16 @@ const Schema = mongoose.Schema;
 
 const MCTSchema = new Schema({
     testname: String,
-    course_id: Schema.Types.ObjectId,
-    publishedFrom : Date,
-    publishedUntil : Date,
-    tests: Array,
+    publishedFrom: Date,
+    publishedUntil: Date,
+    questions: [{type: Schema.Types.ObjectId, ref: 'question'}]
+}, { usePushEach: true });
+
+const QuestionSchema = new Schema({
+    question: String,
+    answers: [{ answer: String, points: Number }]
 });
 
+
+mongoose.model('question', QuestionSchema);
 mongoose.model('mct', MCTSchema);
