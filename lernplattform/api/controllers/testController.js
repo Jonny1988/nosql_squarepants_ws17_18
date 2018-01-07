@@ -85,21 +85,29 @@ exports.createTest = function (request, response) {
                 publishedFrom: range.publishedFrom,
                 publishedUntil: range.publishedUntil
             });
+            console.log(request.body);
             request.body.questions.forEach(function (question) {
                 const quest = new Question(question);
                 quest.save();
                 mct.questions.push(quest);
             });
+
             mct.save(function (err) {
-                if (err) return response.sendStatus(500);
+                if (err) {
+                    console.log(err);
+                    return response.sendStatus(500);
+                }
                 course.tests.push(mct);
                 course.save(function (err) {
-                    if (err) return response.sendStatus(500);
+                    if (err) {
+                        console.log(err);
+                        return response.sendStatus(500);
+                    }
                     response.redirect("/course/" + request.body.coursename);
                 });
             });
-
-        }).catch(function () {
+        }).catch(function (err) {
+            console.log(err);
             return response.sendStatus(500);
         });
     });

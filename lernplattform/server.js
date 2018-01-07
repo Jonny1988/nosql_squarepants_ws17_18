@@ -22,8 +22,8 @@ const options = {
     connection: {
         host: 'localhost',
         port: 3306,
-        user: 'hans',
-        password: '',
+        user: 'root',
+        password: 'root',
         database: 'userdb'
     },
     table: 'sessions',
@@ -42,6 +42,8 @@ app.use(session({
 
 //App Config
 app.use(bodyParser());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
