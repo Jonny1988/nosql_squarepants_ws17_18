@@ -84,69 +84,7 @@ exports.updateStudents = function (request, response) {
     });
 };
 
-exports.removeStudentsFromCourse = function (request, response) {
-    securityService.isSessionUser(request, response, true).then(function () {
-        const removeStudents = request.body.students;
-        const _id = request.body._id;
-        Course.findOne({_id: _id}, function (err, course) {
-            if (err || !course) response.sendStatus(500);
-            const courseStudents = course.students.filter(item => !removeStudents.includes(item));
-            Course.findOneAndUpdate({_id: _id},
-                {students: courseStudents}, function (err) {
-                    if (err)
-                        response.sendStatus(500);
-                    response.sendStatus(201);
-                });
-        });
-    });
-};
-
-exports.getAdminCourses = function (request, response) {
-    securityService.isSessionUser(request, response, true).then(function (user) {
-        Course.find({owner: user.username},
-            function (err, courses) {
-                if (err || !courses)
-                    response.sendStatus(500);
-                response.send(courses);
-            })
-    });
-};
-
-exports.getStudentsFromCourse = function (request, response) {
-    securityService.isSessionUser(request, response, false).then(function () {
-        const _id = request.query["_id"].replace(new RegExp(new RegExp("\""), 'g'), "");
-        Course.findOne({_id: _id}, function (err, course) {
-            if (err) {
-                response.sendStatus(500);
-            } else if (course) {
-                response.send(course.students);
-            } else {
-                response.send("Dieser Kurs existiert nicht");
-            }
-        });
-    });
-};
-
-exports.getCoursesForStudent = function (request, response) {
-    securityService.isSessionUser(request, response, false).then(function (user) {
-        const _id = request.query["_id"].replace(new RegExp(new RegExp("\""), 'g'), "");
-        Course.find({_id: _id}, function (err, courses) {
-            if (err || !courses)
-                response.sendStatus(500);
-            let studentCourses = [];
-            for (let pos in courses) {
-                const possibleStudentCourse = courses[pos];
-                if (possibleStudentCourse.students.includes(user.username)) {
-                    studentCourses.push({_id: possibleStudentCourse._id, coursename: possibleStudentCourse.coursename});
-                }
-            }
-            response.send(studentCourses);
-        });
-    });
-};
-
-
-exports.getCourse = function (request, response) {
+exports.getCourseView = function (request, response) {
     securityService.getSessionUser(request).then(function (user) {
         Course.findOne({coursename: request.params.coursename}).
         populate({

@@ -25,12 +25,7 @@
             </li>
         </ul>
     </div>
-    <span data-display="username" class="navbar-text" style="margin-right: 10px">
-        <%= user.username %>
-    </span>
-    <form class="form-inline">
-        <a class="btn btn-dark" type="button" href="/logout">Ausloggen</a>
-    </form>
+    <%- include("../snippets/navUser", {user: user}) %>
 </nav>
 
 <div class="container">

@@ -63,7 +63,7 @@
                     <input class="form-control" id="password" type="password" name="password"/>
                 </div>
                 <div class="form-group">
-                    <label for="password">Passwort wiederholen</label>
+                    <label for="passwordConf">Passwort wiederholen</label>
                     <input class="form-control" id="passwordConf" type="password" name="passwordConf"/>
                 </div>
                 <div class="form-group">
@@ -82,8 +82,8 @@
 </body>
 <script>
     $(document).ready(function () {
-        var $login = $('#login');
-        var $register = $('#register');
+        let $login = $('#login');
+        let $register = $('#register');
         $login.find('[data-action="change"]').click(function() {
             $login.hide();
             $register.show();

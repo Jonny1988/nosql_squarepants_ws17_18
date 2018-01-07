@@ -61,35 +61,3 @@ exports.updateTheme = function (request, response) {
             });
     })
 };
-
-
-exports.getThemesForCourseAdmin = function (request, response) {
-    securityService.isSessionUser(request, response, true).then(function () {
-        const course_id = request.query["course_id"].replace(new RegExp(new RegExp("\""), 'g'), "");
-        Theme.find({course_id: course_id}, function (err, themes) {
-            if (err) return console.error(err);
-            response.send(themes);
-        })
-    });
-};
-
-exports.getThemesForCourseStudent = function (request, response) {
-    securityService.isSessionUser(request, response, false).then(function (user) {
-        const course_id = request.query["course_id"].replace(new RegExp(new RegExp("\""), 'g'), "");
-        const student_id = "Hans";
-        Course.findOne({_id : course_id}, function (err, course) {
-            if(err || (!course))
-                response.sendStatus(500)
-            if(!course.students.includes(student_id)){
-                console.log("Student gehört nicht zum Kurs")
-                response.send(500)
-            }else{
-                Theme.find({course_id : course_id},function (err, themes) {
-                    if(err)
-                        response.sendStatus(500);
-                    response.send(themes)
-                })
-            }
-        });
-    });
-};
