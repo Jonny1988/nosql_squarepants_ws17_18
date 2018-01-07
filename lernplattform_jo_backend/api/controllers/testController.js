@@ -29,6 +29,10 @@ exports.getTestView = function (request, response) {
                 path: 'tests',
                 populate: { path: 'questions'}
             })
+            .populate({
+                path: 'tests',
+                populate: { path: 'results'}
+            })
             .exec().then(function (course) {
                 if (!course)
                     return response.sendStatus(500);
@@ -40,7 +44,19 @@ exports.getTestView = function (request, response) {
                         break;
                     }
                 }
-                response.render('student/test', { user: user, course: course, test: test});
+                // hole den wenn bekannten alten result
+                let result;
+                for(let i = 0; i < test.results.length; i++) {
+                    if (test.results[i].student == user.username) {
+                        result = test.results[i];
+                        break;
+                    }
+                }
+                // Kein Result gefunden ? dann schreib den test
+                if (!result)
+                    return response.render('student/test', { user: user, course: course, test: test});
+                // ansonten zeige den Resultat an
+                return response.render('student/result', { user: user, course: course, test: test, result: result});
             }).catch(function () {
                 return response.sendStatus(500);
             });
@@ -198,7 +214,7 @@ exports.saveStudentTestResult = function (request, response) {
                 mct.results.push(result);
                 mct.save(function (err) {
                     if (err) return response.sendStatus(500);
-                    response.redirect("/course/"+request.body.coursename);
+                    response.redirect("/course/"+request.body.coursename+"/test/"+mct._id);
                 });
         }).catch(function() {
             return response.sendStatus(500);
@@ -208,14 +224,8 @@ exports.saveStudentTestResult = function (request, response) {
 
 function calculatePoints(mct, answers) {
     let points = 0;
-    console.log("calc POints");
-    console.log(mct);
-    console.log(answers);
     for(let questionId = 0; questionId < mct.questions.length; questionId ++) {
-        console.log("schaue für frage : "+mct.questions[questionId].question);
-        console.log("antwort : "+answers[questionId].answer);
         points += mct.questions[questionId].answers[answers[questionId].answer].points;
-        console.log("points nun "+ points);
     }
     return points;
 }
