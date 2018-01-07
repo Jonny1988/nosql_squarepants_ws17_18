@@ -20,16 +20,39 @@ exports.getCreateTestView = function (request, response) {
             return response.sendStatus(500);
         });
     });
-}
+};
+
+exports.getTestView = function (request, response) {
+    securityService.isSessionUser(request, response, false).then(function (user) {
+        Course.findOne({coursename: request.params.coursename, tests: request.params.test_id})
+            .populate({
+                path: 'tests',
+                populate: { path: 'questions'}
+            })
+            .exec().then(function (course) {
+                if (!course)
+                    return response.sendStatus(500);
+                // hole den spezifischen Test
+                let test = null;
+                for(let i = 0; i < course.tests.length; i++) {
+                    if (course.tests[i]._id == request.params.test_id) {
+                        test = course.tests[i];
+                        break;
+                    }
+                }
+                response.render('student/test', { user: user, course: course, test: test});
+            }).catch(function () {
+                return response.sendStatus(500);
+            });
+    });
+};
 
 
 exports.createTest = function (request, response) {
     securityService.isSessionUser(request, response, true).then(function () {
-        Course.findOne({coursename: request.body.coursename}).
-        populate({
-            path: 'tests'
-        }).
-        exec().then(function(course) {
+        Course.findOne({coursename: request.body.coursename})
+            .populate( 'tests')
+            .exec().then(function(course) {
             let publishedFrom = new Date(request.body.publishedFrom);
             let publishedUntil = new Date(request.body.publishedFrom);
             publishedFrom.setMinutes(0);
@@ -152,37 +175,47 @@ exports.getResultsForStudent = function (request, response) {
 
 exports.saveStudentTestResult = function (request, response) {
     securityService.isSessionUser(request, response, false).then(function (user) {
-        const course_id = request.body.course_id;
-        const test_id = request.body.test_id;
-        const answers = request.body;
-        Result.find({
-            course_id: course_id,
-            test_id: test_id,
-            student: user.username
-        }, function (err, result) {
-            const res = result;
-            MCT.find({course_id: course_id, _id: test_id}, function (err, test) {
-                if (res.length == 0) {
-                    let studentTestResults = generateResult(answers, test);
-                    let result = new Result({
-                        course_id: course_id,
-                        test_id: test_id,
-                        student: username,
-                        results: studentTestResults.results,
-                        points: studentTestResults.points
-                    });
-                    result.save();
-                    response.sendStatus(201);
-                } else {
-                    response.sendStatus(200);
+        MCT.findOne({_id: request.body.test_id})
+            .populate( 'results')
+            .populate( 'questions')
+            .exec().then(function(mct) {
+                // alten Result suchen
+                let result;
+                for(let i = 0; i < mct.results.length; i++) {
+                    if (mct.results[i].student == user.username) {
+                        result = mct.results[i];
+                        break;
+                    }
                 }
-            });
+                // darf nicht nochmal....
+                if (result)
+                    return response.sendStatus(500);
+                result = new Result({
+                    student: user.username
+                });
+                result.points = calculatePoints(mct, request.body.question);
+                result.save();
+                mct.results.push(result);
+                mct.save(function (err) {
+                    if (err) return response.sendStatus(500);
+                    response.redirect("/course/"+request.body.coursename);
+                });
+        }).catch(function() {
+            return response.sendStatus(500);
         });
     });
 };
 
-function generateResult(answers , test){
-    let results = { results : null , points : 0 };
-    //TODO fixme
-    return results;
+function calculatePoints(mct, answers) {
+    let points = 0;
+    console.log("calc POints");
+    console.log(mct);
+    console.log(answers);
+    for(let questionId = 0; questionId < mct.questions.length; questionId ++) {
+        console.log("schaue für frage : "+mct.questions[questionId].question);
+        console.log("antwort : "+answers[questionId].answer);
+        points += mct.questions[questionId].answers[answers[questionId].answer].points;
+        console.log("points nun "+ points);
+    }
+    return points;
 }

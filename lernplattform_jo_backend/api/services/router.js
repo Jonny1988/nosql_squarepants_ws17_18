@@ -12,6 +12,7 @@ module.exports = function (app) {
     app.route('/courses/student/').get(courseController.getCoursesForStudent);
     app.route('/course/:coursename').get(courseController.getCourse);
     app.route('/course/:coursename/test').get(testController.getCreateTestView);
+    app.route('/course/:coursename/test/:test_id').get(testController.getTestView);
 
     const themeController = require('../controllers/themeController');
     app.route('/theme/').post(themeController.createTheme);

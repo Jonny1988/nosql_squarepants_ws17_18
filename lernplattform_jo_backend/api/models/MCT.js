@@ -5,7 +5,8 @@ const MCTSchema = new Schema({
     testname: String,
     publishedFrom: Date,
     publishedUntil: Date,
-    questions: [{type: Schema.Types.ObjectId, ref: 'question'}]
+    questions: [{type: Schema.Types.ObjectId, ref: 'question'}],
+    results: [{type: Schema.Types.ObjectId, ref: 'result'}]
 }, { usePushEach: true });
 
 const QuestionSchema = new Schema({

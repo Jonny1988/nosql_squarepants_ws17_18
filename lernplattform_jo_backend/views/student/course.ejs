@@ -49,7 +49,7 @@
     <h3>Tests</h3>
     <div>
         <% course.tests.forEach(function(test){ %>
-            <a href=""><%= test.testname %></a><br>
+            <a href="/course/<%= course.coursename %>/test/<%= test._id %>"><%= test.testname %></a><br>
         <% }); %>
     </div>
 </div>

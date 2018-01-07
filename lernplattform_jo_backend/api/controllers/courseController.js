@@ -154,8 +154,7 @@ exports.getCourse = function (request, response) {
             populate: { path: 'files' }
         }).
         populate({
-            path: 'tests',
-            populate: { path: 'questions'}
+            path: 'tests'
         }).
         exec().then(function(course) {
             if (user.isAdmin)
