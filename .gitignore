@@ -1,6 +1,3 @@
-
-lernplattform_jo/node_modules/
-
-lernplattform_jo_backend/node_modules/
-lernplattform_jo_backend/.idea/
-lernplattform_jo_backend/files/
+lernplattform/node_modules/
+lernplattform/.idea/
+lernplattform/files/

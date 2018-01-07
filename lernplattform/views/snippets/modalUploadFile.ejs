@@ -1,0 +1,33 @@
+<div class="modal fade" id="modalUploadFile" tabindex="-1" role="dialog" aria-labelledby="modalUploadFile" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Datei hochladen</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="/file/upload/" method="post" encType="multipart/form-data">
+                <div class="modal-body">
+                    <input type="hidden" name="coursename" value="<%= course.coursename %>">
+                    <input type="hidden" name="theme_id">
+                    <div class="form-group">
+                        <label for="publishedFrom">Ver&oumlffentlicht von</label>
+                        <input type="date" class="form-control" name="publishedFrom">
+                    </div>
+                    <div class="form-group">
+                        <label for="publishedUntil">Ver&oumlffentlicht bis</label>
+                        <input type="date" class="form-control" name="publishedUntil">
+                    </div>
+                    <div class="form-group">
+                        <input type="file" name="file">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Schließen</button>
+                    <button class="btn btn-primary" type="submit">Datei hochladen</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
