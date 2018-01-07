@@ -1,4 +1,3 @@
-const path = require('path');
 const securityService = require('../services/securityService');
 const mongoose = require('mongoose');
 
@@ -22,6 +21,27 @@ exports.getCreateTestView = function (request, response) {
     });
 };
 
+function getTestViewForStudent(user, course, test, response) {
+    // hole den wenn bekannten alten result
+    let result;
+    for(let i = 0; i < test.results.length; i++) {
+        if (test.results[i].student == user.username) {
+            result = test.results[i];
+            break;
+        }
+    }
+    // Kein Result gefunden ? dann schreib den test
+    if (!result) {
+        // darf nur noch schreiben wenn nicht abgelaufen
+        if (test.publishedFrom <= Date.now() && test.publishedUntil >= Date.now())
+            return response.render('student/test', { user: user, course: course, test: test});
+        return response.sendStatus(500);
+
+    }
+    // ansonten zeige den Resultat an
+    return response.render('student/result', { user: user, course: course, test: test, result: result});
+}
+
 exports.getTestView = function (request, response) {
     securityService.isSessionUser(request, response, false).then(function (user) {
         Course.findOne({coursename: request.params.coursename, tests: request.params.test_id})
@@ -44,19 +64,10 @@ exports.getTestView = function (request, response) {
                         break;
                     }
                 }
-                // hole den wenn bekannten alten result
-                let result;
-                for(let i = 0; i < test.results.length; i++) {
-                    if (test.results[i].student == user.username) {
-                        result = test.results[i];
-                        break;
-                    }
-                }
-                // Kein Result gefunden ? dann schreib den test
-                if (!result)
-                    return response.render('student/test', { user: user, course: course, test: test});
-                // ansonten zeige den Resultat an
-                return response.render('student/result', { user: user, course: course, test: test, result: result});
+                if (user.isAdmin)
+                    response.render('admin/result', { user: user, course: course, test: test});
+                else
+                    getTestViewForStudent(user, course, test, response);
             }).catch(function () {
                 return response.sendStatus(500);
             });
@@ -100,94 +111,6 @@ exports.createTest = function (request, response) {
         });
     });
 };
-
-// TODO update Test sollte nie funktionieren
-exports.updateTest = function (request, response) {
-    securityService.isSessionUser(request, response, true).then(function () {
-        const form = request.body;
-        let publishedFrom = new Date(form.publishedFrom);
-        let publishedUntil = new Date(form.publishedFrom);
-        publishedFrom.setMinutes(0);
-        publishedFrom.setHours(0);
-        publishedFrom.setSeconds(0);
-        publishedUntil.setMinutes(23), publishedUntil.setHours(59);
-        publishedUntil.setSeconds(59);
-        MCT.findOneAndUpdate({_id: form._id}, {
-            testname: form.testname,
-            publishedFrom: publishedFrom,
-            publishedUntil: publishedUntil,
-            tests: form.tests,
-        }, function (err) {
-            if (err)
-                response.sendStatus(500);
-            response.sendStatus(201);
-        });
-    });
-};
-
-// TODO delete Test ? gleiches problem wie update
-exports.deleteTest = function (request, response) {
-    securityService.isSessionUser(request, response, true).then(function () {
-        MCT.remove({_id: request.body._id}, function (err) {
-            if (err)
-                response.sendStatus(500);
-            response.sendStatus(200);
-        });
-    });
-};
-
-exports.getTestsForCourseAdmin = function (request, response) {
-    securityService.isSessionUser(request, response, true).then(function () {
-        const course_id = request.query["course_id"].replace(new RegExp(new RegExp("\""), 'g'), "");
-        MCT.find({course_id: course_id}, function (err, tests) {
-            if (err)
-                response.sendStatus(500);
-            response.send(tests)
-        });
-    });
-};
-
-exports.getTestsForCourseStudent = function (request, response) {
-    securityService.isSessionUser(request, response, false).then(function () {
-        const course_id = request.query["course_id"].replace(new RegExp(new RegExp("\""), 'g'), "");
-        MCT.find({course_id: course_id}, function (err, tests) {
-            if (err)
-                response.sendStatus(500);
-            let studentTests = []
-            for (let pos in tests) {
-                let test = tests[pos];
-                if (test && test.publishedFrom <= Date.now() && test.publishedUntil >= Date.now()) {
-                    // TODO fixme was darf der Student alles sehen?
-                    studentTests.push({question: test.tests.question, answers: test.tests.answers});
-                }
-            }
-            response.send(studentTests)
-        });
-    });
-};
-
-exports.getResultsForAdmin = function (request, response) {
-    securityService.isSessionUser(request, response, true).then(function () {
-        const test_id = request.query["test_id"].replace(new RegExp(new RegExp("\""), 'g'), "");
-        Result.find({test_id: test_id}, function (err, results) {
-            if (err)
-                response.sendStatus(500);
-            response.send(results);
-        });
-    });
-};
-
-exports.getResultsForStudent = function (request, response) {
-    securityService.isSessionUser(request, response, false).then(function () {
-        const course_id = request.query["course_id"].replace(new RegExp(new RegExp("\""), 'g'), "");
-        const test_id = request.query["test_id"].replace(new RegExp(new RegExp("\""), 'g'), "");
-        const student = request.query["student"].replace(new RegExp(new RegExp("\""), 'g'), "");
-        Result.find({course_id: course_id, test_id: test_id, student: student}, function (err, results) {
-            response.send(results);
-        });
-    });
-};
-
 
 exports.saveStudentTestResult = function (request, response) {
     securityService.isSessionUser(request, response, false).then(function (user) {
