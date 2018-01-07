@@ -1,18 +1,16 @@
-const path = require('path');
-const securityService = require('../services/securityService');
-const mongoose = require('mongoose');
 require('../models/Theme');
+require('../models/File');
+const securityService = require('../services/securityService');
+const path = require('path');
+const mongoose = require('mongoose');
 const Theme = mongoose.model('theme');
+const File = mongoose.model('file');
 
-var fileDir = path.dirname(require.main.filename)+ '/files/';
+const fileDir = path.dirname(require.main.filename) + '/files/';
 
 function getFilePath(file) {
     return path.join(fileDir + file._id + "_" + file.filename);
 }
-
-
-require('../models/File');
-const File = mongoose.model('file');
 
 exports.downloadFile = function (request, response) {
     securityService.getSessionUser(request).then(function (user) {
@@ -31,35 +29,16 @@ exports.downloadFile = function (request, response) {
     });
 };
 
-exports.getFilesForThemeStudent = function (request, response) {
-    securityService.isSessionUser(request, response, false).then(function () {
-        const course_id = request.query["course_id"].replace(new RegExp(new RegExp("\""), 'g'), "");
-        const theme_id = request.query["theme_id"].replace(new RegExp(new RegExp("\""), 'g'), "");
-        File.find({course_id: course_id, theme_id: theme_id}, function (err, files) {
-            if (err)
-                response.sendStatus(500);
-            var studentFiles = [];
-            for (var pos in files) {
-                var file = files[pos];
-                if (file && file.publishedFrom <= Date.now() && file.publishedUntil >= Date.now()) {
-                    studentFiles.push(file);
-                }
-            }
-            response.send(studentFiles);
-        });
-    });
-};
-
 exports.uploadFile = function (request, response) {
     securityService.isSessionUser(request, response, true).then(function () {
         if (!request.files || !request.files.file)
             return response.send("Keine Datei ausgewählt");
         Theme.findOne({themename: request.body.themename}, function (err, theme) {
             if (err || !theme) return response.sendStatus(500);
-            var filename = request.files.file.name;
+            let filename = request.files.file.name;
             filename = filename.replace(new RegExp(new RegExp(" "), 'g'), "");
-            var publishedFrom = new Date(request.body.publishedFrom);
-            var publishedUntil = new Date(request.body.publishedFrom);
+            let publishedFrom = new Date(request.body.publishedFrom);
+            let publishedUntil = new Date(request.body.publishedFrom);
             publishedFrom.setMinutes(0);
             publishedFrom.setHours(0);
             publishedFrom.setSeconds(0);

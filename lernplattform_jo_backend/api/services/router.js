@@ -7,11 +7,12 @@ module.exports = function (app) {
     const themeController = require('../controllers/themeController');
 
     app.route('/').get(userController.getLoginView);
+    app.route('/login/').get(userController.getLoginView);
     app.route('/user/logout/').get(userController.logout);
     app.route('/user/register').post(userController.createUser);
     app.route('/user/login/').post(userController.login);
 
-    app.route('/index/').get(userController.getOverview);
+    app.route('/index/').get(userController.getOverView);
 
     app.route('/course/').post(courseController.createCourse);
     app.route('/course/update/').post(courseController.updateCourse);
@@ -26,20 +27,9 @@ module.exports = function (app) {
     app.route('/theme/update/').post(themeController.updateTheme);
     app.route('/theme/delete/').post(themeController.deleteTheme);
 
-
-
-    app.route('/students/').get(userController.getAllStudents);
-    app.route('/user/get/').get(userController.getLoggedInUser);
-    app.route('/login/').get(userController.getLoginView);
-
-
-    app.route('/file/delete/').get(fileController.deleteFile);
     app.route('/file/upload/').post(fileController.uploadFile);
+    app.route('/file/delete/').post(fileController.deleteFile);
     app.route('/file/download/').get(fileController.downloadFile);
-    app.route('/files/student/').get(fileController.getFilesForThemeStudent);
-
-
-
 
     app.route('/test/').post(testController.createTest);
     app.route('/test/result/').post(testController.saveStudentTestResult);

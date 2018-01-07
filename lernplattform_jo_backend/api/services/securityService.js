@@ -3,7 +3,7 @@ const databaseConnection = require('../dbconnection/mariasql');
 function getUser(username) {
     const con = databaseConnection.getCon();
     const sql = "Select * from users where username = \'" + username + "\';";
-    return new Promise(function(resolve, reject) {
+    return new Promise(function (resolve, reject) {
         con.query(sql, function (err, result) {
 
             if (err) {
@@ -22,7 +22,7 @@ function getUser(username) {
  * mit boolean isAdmin und String username
  */
 exports.getSessionUser = function (request) {
-    return new Promise(function(resolve, reject) {
+    return new Promise(function (resolve, reject) {
         try {
             getUser(request.session.username).then(function (user) {
                 resolve({isAdmin: user.role == 0x15, username: user.username});
@@ -47,8 +47,8 @@ exports.getSessionUser = function (request) {
  * Man kann den Error auch catchen, dies funktioniert aber nach dem
  * response.sendStatus(500)
  */
-exports.isSessionUser = function(request, response, checkForAdmin) {
-    return new Promise(function(resolve, reject) {
+exports.isSessionUser = function (request, response, checkForAdmin) {
+    return new Promise(function (resolve, reject) {
         exports.getSessionUser(request).then(function (user) {
             if (!checkForAdmin || user.isAdmin)
                 resolve(user);
@@ -56,7 +56,7 @@ exports.isSessionUser = function(request, response, checkForAdmin) {
                 response.sendStatus(500);
                 reject();
             }
-        }).catch(function(err) {
+        }).catch(function (err) {
             response.sendStatus(500);
             reject(err);
         })

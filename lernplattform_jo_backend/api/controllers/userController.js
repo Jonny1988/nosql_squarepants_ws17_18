@@ -1,10 +1,11 @@
-const securityService = require("../services/securityService")
-const databaseConnection = require("../dbconnection/mariasql")
+require('../models/Course');
+const securityService = require("../services/securityService");
+const databaseConnection = require("../dbconnection/mariasql");
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const con = databaseConnection.getCon();
-require('../models/Course');
+
 const Course = mongoose.model('course');
 
 // TODO
@@ -14,23 +15,19 @@ exports.login = function (request, response) {
     const username = request.body.username;
     const password = request.body.password;
     const con = databaseConnection.getCon();
-    const sql = "Select * from users where username = \'" + username + "\';";
-    con.query(sql, function (err, result, fields) {
+    const sql = "SELECT * FROM users WHERE username = \'" + username + "\';";
+    con.query(sql, function (err, result) {
         if (err) throw err;
         if (result[0] && result[0].username === username) {
             bcrypt.compare(password, result[0].password, function (err, isCorrectPassword) {
-                if (isCorrectPassword) {
-                    request.session.username = username;
-                    response.redirect("/index/");
-                } else {
-                    response.send("Das eingegebene Passwort ist nicht korrekt");
-                }
+                if (!isCorrectPassword)
+                    return response.send("Das eingegebene Passwort ist nicht korrekt");
+                request.session.username = username;
+                return response.redirect("/index/");
             });
         } else {
             response.send("Dieser Benutzername existiert nicht");
         }
-
-
     });
 };
 
@@ -42,36 +39,33 @@ exports.createUser = function (request, response) {
         const user = request.body;
         con.query("SELECT * FROM users WHERE username = \'" + user.username + "\';", function (err, result) {
             if (err) throw err;
-            if (result.length > 0) {
-                response.send("Dieser Benutzer existiert bereits");
-            } else {
-                con.query("SELECT * FROM users WHERE email = \'" + user.email + "\';", function (err, result) {
-                    if (err) throw err;
-                    if (result.length > 0) {
-                        response.send("Diese E-Mail Adresse wird bereits verwendet");
-                    } else {
-                        bcrypt.genSalt(saltRounds, function (err, salt) {
-                            bcrypt.hash(user.password, salt, function (err, hash) {
-                                var role = user.role == 'Admin' ? 0x15 : 0x25;
-                                var sql =
-                                    "INSERT INTO users "
-                                    + "(username,surname,lastname,email,password,role) "
-                                    + "VALUES ("
-                                    + "\"" + user.username + "\", "
-                                    + "\"" + user.surname + "\", "
-                                    + "\"" + user.lastname + "\", "
-                                    + "\"" + user.email + "\", "
-                                    + "\"" + hash + "\", "
-                                    + "\"" + role + "\");";
-                                con.query(sql, function (err, result) {
-                                    if (err) throw err;
-                                });
-                            });
+            if (result.length > 0)
+                return response.send("Dieser Benutzer existiert bereits");
+            con.query("SELECT * FROM users WHERE email = \'" + user.email + "\';", function (err, result) {
+                if (err) throw err;
+                if (result.length > 0)
+                    return response.send("Diese E-Mail Adresse wird bereits verwendet");
+
+                bcrypt.genSalt(saltRounds, function (err, salt) {
+                    bcrypt.hash(user.password, salt, function (err, hash) {
+                        let role = user.role == 'Admin' ? 0x15 : 0x25;
+                        let sql =
+                            "INSERT INTO users "
+                            + "(username,surname,lastname,email,password,role) "
+                            + "VALUES ("
+                            + "\"" + user.username + "\", "
+                            + "\"" + user.surname + "\", "
+                            + "\"" + user.lastname + "\", "
+                            + "\"" + user.email + "\", "
+                            + "\"" + hash + "\", "
+                            + "\"" + role + "\");";
+                        con.query(sql, function (err, result) {
+                            if (err) throw err;
                         });
-                        response.sendStatus(200)
-                    }
+                    });
                 });
-            }
+                response.sendStatus(200);
+            });
         });
     } else {
         response.send("Die eingegebenen Passwörter stimmen nicht überein");
@@ -84,26 +78,6 @@ exports.logout = function (request, response) {
     request.session.destroy();
     response.redirect("/login/");
 };
-
-exports.getAllStudents = function(request, response){
-    securityService.isSessionUser(request, response, true).then(function () {
-        const getAllStudents = "Select username from users where role =" + 37 + ";";
-        con.query(getAllStudents, function (err, students) {
-            if(err)
-                response.sendStatus(500);
-            else
-                response.send(students);
-        });
-    })
-};
-
-exports.getLoggedInUser = function(request, response) {
-    securityService.getSessionUser(request).then(function (user) {
-        response.send(user);
-    }).catch(function() {
-        response.sendStatus(500);
-    })
-}
 
 exports.getLoginView = function (request, response) {
     response.render('login');
@@ -131,15 +105,12 @@ function getOverviewForStudent(user, response) {
         });
 }
 
-exports.getOverview = function (request, response) {
+exports.getOverView = function (request, response) {
     securityService.getSessionUser(request).then(function (user) {
-        if (user.isAdmin) {
-            getOverviewForAdmin(user, response);
-        } else {
-            getOverviewForStudent(user, response);
-        }
-    }).catch(function(err) {
-        console.log(err);
+        if (user.isAdmin)
+            return getOverviewForAdmin(user, response);
+        return getOverviewForStudent(user, response);
+    }).catch(function () {
         response.sendStatus(403);
     });
 };
