@@ -15,7 +15,7 @@ exports.createCourse = function (request, response) {
             if (err)
                 return response.sendStatus(500);
             if (data)
-                return response.status(406).send("Der Kurs " + coursename + " existiert bereits!");
+              return response.status(406).send("Der Kurs " + coursename + " existiert bereits!");
             let defaultTheme = new Theme({
                 _id: new mongoose.Types.ObjectId(),
                 themename: 'Default'

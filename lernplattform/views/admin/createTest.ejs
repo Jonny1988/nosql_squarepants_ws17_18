@@ -23,7 +23,9 @@
     </div>
     <%- include("../snippets/navUser", {user: user}) %>
 </nav>
-
+<div class="container">
+<h4><%= course.students.length %> Studenten werden an der <%= course.coursename %>-Prüfung teilnehmen</h4>
+</div>
 <div class="container">
     <form method="post" action="/test/">
         <div class="row">

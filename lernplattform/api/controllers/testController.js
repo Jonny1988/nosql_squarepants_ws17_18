@@ -85,7 +85,6 @@ exports.createTest = function (request, response) {
                 publishedFrom: range.publishedFrom,
                 publishedUntil: range.publishedUntil
             });
-            console.log(request.body);
             request.body.questions.forEach(function (question) {
                 const quest = new Question(question);
                 quest.save();
@@ -93,21 +92,15 @@ exports.createTest = function (request, response) {
             });
 
             mct.save(function (err) {
-                if (err) {
-                    console.log(err);
-                    return response.sendStatus(500);
-                }
+                if (err) return response.sendStatus(500);
+
                 course.tests.push(mct);
                 course.save(function (err) {
-                    if (err) {
-                        console.log(err);
-                        return response.sendStatus(500);
-                    }
+                    if (err) return response.sendStatus(500);
                     response.redirect("/course/" + request.body.coursename);
                 });
             });
         }).catch(function (err) {
-            console.log(err);
             return response.sendStatus(500);
         });
     });
