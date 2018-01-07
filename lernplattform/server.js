@@ -17,7 +17,7 @@ app.use(express.static('public'));
 app.set('view engine', 'ejs');
 
 //session management
-var options = {
+const options = {
     client: 'mysql',
     connection: {
         host: 'localhost',
@@ -30,7 +30,7 @@ var options = {
     expires: 365 * 24 * 60 * 60 * 1000 // 1 year in ms
 };
 
-var sessionStore = new SessionStore(options);
+const sessionStore = new SessionStore(options);
 
 app.use(session({
     key: 'user_id',
@@ -51,15 +51,12 @@ app.use(function (req, res, next) {
 
 //Map global promise -> get ride of Warnings (When you habe depreciationsWarning on console)
 mongoose.Promise = global.Promise;
-//Connect your database to mongoose
-mongoose.connect('mongodb://localhost/lernplatform', {
+mongoose.connect('mongodb://localhost/lernplattform', {
     useMongoClient:true
-    //use Promises or callback methode. I will use promises with arrow function
-})
-    .then(() => console.log('MongoDB Connectec...'))
+}).then(() => console.log('MongoDB Connectec...'))
 .catch(err => console.log(err));
 //routes
-var router = require('./api/services/router');
+const router = require('./api/services/router');
 
 router(app);
 

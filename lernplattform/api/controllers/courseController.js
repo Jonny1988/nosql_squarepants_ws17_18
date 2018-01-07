@@ -28,8 +28,10 @@ exports.createCourse = function (request, response) {
             });
             course.themes.push(defaultTheme);
 
-            course.save();
-            response.redirect("/index");
+            course.save(function (err) {
+                if (err) return response.sendStatus(500);
+                response.redirect("/index");
+            });
         });
     });
 };

@@ -4,13 +4,11 @@ exports.isDateInRange = function (range) {
 exports.cleanRange = function (range) {
     let result = {
         publishedFrom: new Date(range.publishedFrom),
-        publishedUntil: new Date(range.publishedFrom)
+        publishedUntil: new Date(range.publishedUntil)
     };
-    result.publishedFrom.setMinutes(0);
-    result.publishedFrom.setHours(0);
-    result.publishedFrom.setSeconds(0);
-    result.publishedUntil.setMinutes(23);
-    result.publishedUntil.setHours(59);
+    // EndZeitpunkt auf kurz vor mitternacht
+    result.publishedUntil.setHours(23);
+    result.publishedUntil.setMinutes(59);
     result.publishedUntil.setSeconds(59);
     return result;
 };
