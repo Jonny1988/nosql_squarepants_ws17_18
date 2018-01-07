@@ -62,6 +62,7 @@ exports.createTest = function (request, response) {
     });
 };
 
+// TODO update Test sollte nie funktionieren
 exports.updateTest = function (request, response) {
     securityService.isSessionUser(request, response, true).then(function () {
         const form = request.body;
@@ -83,8 +84,9 @@ exports.updateTest = function (request, response) {
             response.sendStatus(201);
         });
     });
-}
+};
 
+// TODO delete Test ? gleiches problem wie update
 exports.deleteTest = function (request, response) {
     securityService.isSessionUser(request, response, true).then(function () {
         MCT.remove({_id: request.body._id}, function (err) {
